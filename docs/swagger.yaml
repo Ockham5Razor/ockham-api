@@ -1,0 +1,41 @@
+basePath: /api
+definitions:
+  v1.RegisterJsonForm:
+    properties:
+      email:
+        type: string
+      rawPassword:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: All APIs of Gol-C Project
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Gol-C API
+  version: "1.0"
+paths:
+  /v1/auth/register:
+    post:
+      description: Register to create a user
+      parameters:
+      - description: 需要上传的JSON
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RegisterJsonForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Register
+swagger: "2.0"
