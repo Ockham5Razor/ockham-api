@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-sql-driver/mysql"
 	"gol-c/database"
 	"gol-c/model"
 	"golang.org/x/crypto/bcrypt"
@@ -29,6 +31,7 @@ func Register(c *gin.Context) {
 	if err != nil {
 		log.Printf("JSON format not allowed!")
 		ErrorMessageStatus(c, "JSON format not allowed!", http.StatusBadRequest)
+		return
 	}
 
 	user := &model.User{
@@ -37,7 +40,15 @@ func Register(c *gin.Context) {
 		Email:    registerJsonForm.Email,
 	}
 
-	database.DBConn.Save(user)
+	if dbc := database.DBConn.Create(user); dbc.Error != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(dbc.Error, &mysqlErr) && mysqlErr.Number == 1062 {
+			ErrorMessageStatus(c, "Create user failed: user already exists.", http.StatusBadRequest)
+			return
+		}
+		ErrorMessageStatus(c, "Create user failed: unknown.", http.StatusBadRequest)
+		return
+	}
 
 	Success(c)
 }

@@ -5,16 +5,6 @@ import (
 	"net/http"
 )
 
-type meta struct {
-	success bool
-	message string
-}
-
-type Returner struct {
-	meta meta
-	data interface{}
-}
-
 func Success(c *gin.Context) {
 	SuccessData(c, nil)
 }
@@ -28,21 +18,21 @@ func SuccessDataMessage(c *gin.Context, data interface{}, message string) {
 }
 
 func SuccessDataMessageStatus(c *gin.Context, data interface{}, message string, status int) {
-	c.JSON(status, Returner{
-		meta: meta{
-			success: true,
-			message: message,
+	c.JSON(status, gin.H{
+		"meta": gin.H{
+			"success": false,
+			"message": message,
 		},
-		data: data,
+		"data": data,
 	})
 }
 
 func ErrorMessageStatus(c *gin.Context, message string, status int) {
-	c.JSON(status, Returner{
-		meta: meta{
-			success: true,
-			message: message,
+	c.JSON(status, gin.H{
+		"meta": gin.H{
+			"success": false,
+			"message": message,
 		},
-		data: nil,
+		"data": nil,
 	})
 }
