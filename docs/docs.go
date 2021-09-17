@@ -32,6 +32,31 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/auth/login": {
+            "post": {
+                "description": "Login as a user",
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Login from",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.LoginJsonForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/auth/register": {
             "post": {
                 "description": "Register to create a user",
@@ -59,6 +84,17 @@ var doc = `{
         }
     },
     "definitions": {
+        "v1.LoginJsonForm": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "v1.RegisterJsonForm": {
             "type": "object",
             "properties": {

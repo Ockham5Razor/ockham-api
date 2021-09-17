@@ -22,3 +22,11 @@ func Create(c *gin.Context, value interface{}, valueName string, errorHandler fu
 	}
 	return nil
 }
+
+func GetByField(matchValue interface{}, valueContainer interface{}) {
+	dbc := DBConn.Where(matchValue)
+	if dbc.Error != nil {
+	} else {
+		dbc.Find(valueContainer)
+	}
+}

@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  v1.LoginJsonForm:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   v1.RegisterJsonForm:
     properties:
       email:
@@ -22,6 +29,22 @@ info:
   title: Gol-C API
   version: "1.0"
 paths:
+  /v1/auth/login:
+    post:
+      description: Login as a user
+      parameters:
+      - description: Login from
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.LoginJsonForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Login
   /v1/auth/register:
     post:
       description: Register to create a user

@@ -10,6 +10,7 @@ func ApiV1(r *gin.Engine) {
 		v1GroupAuth := v1Group.Group("/auth")
 		{
 			v1GroupAuth.POST("/register", Register)
+			v1GroupAuth.POST("/login", Login)
 		}
 	}
 }
