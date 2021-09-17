@@ -5,10 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	v1 "gol-c/api/v1"
-	"gol-c/model"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-
+	"gol-c/database"
 	_ "gol-c/docs"
 )
 
@@ -27,15 +24,7 @@ import (
 // @BasePath /api
 func main() {
 
-	// 数据库连接
-	dsn := "root:773746594@tcp(127.0.0.1:3306)/gol_c?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database.")
-	}
-
-	// 移植数据库
-	model.Migrate(db)
+	database.Init()
 
 	// 创建 HTTP 路由
 	r := gin.Default()
@@ -46,7 +35,7 @@ func main() {
 	v1.ApiV1(r)
 
 	// 启动 HTTP 服务
-	err = r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
+	err := r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
 	if err != nil {
 		panic("Failed to listen HTTP port.")
 	}

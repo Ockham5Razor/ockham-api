@@ -1,0 +1,8 @@
+# Rename this file as configs.yaml to use.
+db:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  pass: 000000
+  schema: gol_c
+  charset: utf8mb4

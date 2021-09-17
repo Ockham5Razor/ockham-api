@@ -38,7 +38,7 @@ var doc = `{
                 "summary": "Register",
                 "parameters": [
                     {
-                        "description": "需要上传的JSON",
+                        "description": "Register from",
                         "name": "param",
                         "in": "body",
                         "required": true,
@@ -65,7 +65,7 @@ var doc = `{
                 "email": {
                     "type": "string"
                 },
-                "rawPassword": {
+                "password": {
                     "type": "string"
                 },
                 "username": {

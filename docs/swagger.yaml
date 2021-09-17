@@ -4,7 +4,7 @@ definitions:
     properties:
       email:
         type: string
-      rawPassword:
+      password:
         type: string
       username:
         type: string
@@ -26,7 +26,7 @@ paths:
     post:
       description: Register to create a user
       parameters:
-      - description: 需要上传的JSON
+      - description: Register from
         in: body
         name: param
         required: true
