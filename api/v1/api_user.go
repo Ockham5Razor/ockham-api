@@ -25,10 +25,19 @@ func CreateUser(c *gin.Context) {
 	registerJsonForm.GetJsonForm(c)
 
 	user := &model.User{
-		Username: registerJsonForm.Username,
-		Password: encrypt(registerJsonForm.Password),
-		Email:    registerJsonForm.Email,
+		Username:      registerJsonForm.Username,
+		Password:      encrypt(registerJsonForm.Password),
+		Email:         registerJsonForm.Email,
+		EmailVerified: false,
 	}
+
+	//rnd := randomCode()
+	//
+	//emailVerification := &model.EmailValidation{
+	//	User:          *user,
+	//	ValidatorKey:  uuid.New(),
+	//	ValidatorCode: rnd,
+	//}
 
 	err := database.Create(c, user, "user", ErrorMessageStatus)
 	if err != nil {
