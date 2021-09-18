@@ -11,6 +11,7 @@ func Migrate(db *gorm.DB) {
 		&Commodity{},
 		&ServicePlan{},
 		&Session{},
+		&EmailValidation{},
 	}
 
 	for i := 0; i < len(models); i++ {

@@ -6,3 +6,9 @@ db:
   pass: 000000
   schema: gol_c
   charset: utf8mb4
+email:
+  user: tommy1995@163.com
+  pass: t0mmy123
+  host: smtp.163.com
+  port: 465
+  sign: gol-c

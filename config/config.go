@@ -2,7 +2,6 @@ package config
 
 import (
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"log"
 	"sync"
 )
@@ -16,26 +15,25 @@ type Config struct {
 		Schema  string
 		Charset string
 	}
+	Email struct {
+		User string
+		Pass string
+		Host string
+		Port int
+		Sign string
+	}
 }
 
 var conf Config
-var once sync.Once
+var confOnce sync.Once
 
-func GetConfig() *Config {
-	once.Do(func() {
-		data := readConfigFile()
+func GetConfig() Config {
+	confOnce.Do(func() {
+		data := readConfigFile("configs.yaml")
 		err := yaml.Unmarshal(data, &conf)
 		if err != nil {
 			log.Fatalf("error: %v", err)
 		}
 	})
-	return &conf
-}
-
-func readConfigFile() []byte {
-	bytes, err := ioutil.ReadFile("configs.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return bytes
+	return conf
 }

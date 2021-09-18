@@ -1,0 +1,5 @@
+# Rename this file as test_env.configs.yaml to use.
+email_test:
+  sendTo: tommy1995@163.com
+  subject: some subject
+  body: hello tommy, im gol-c!
