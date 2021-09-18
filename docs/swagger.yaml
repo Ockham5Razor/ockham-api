@@ -29,11 +29,11 @@ info:
   title: Gol-C API
   version: "1.0"
 paths:
-  /v1/auth/login:
+  /v1/auth/sessions:
     post:
       description: Login as a user
       parameters:
-      - description: Login from
+      - description: CreateSession from
         in: body
         name: param
         required: true
@@ -44,12 +44,12 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Login
-  /v1/auth/register:
+      summary: CreateSession
+  /v1/auth/users:
     post:
       description: Register to create a user
       parameters:
-      - description: Register from
+      - description: CreateUser from
         in: body
         name: param
         required: true
@@ -60,5 +60,5 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Register
+      summary: CreateUser
 swagger: "2.0"

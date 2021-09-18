@@ -22,13 +22,13 @@ type LoginJsonForm struct {
 	Password string
 }
 
-// Register
-// @Summary Register
+// CreateUser
+// @Summary CreateUser
 // @Description Register to create a user
 // @Success 200 {string} string    "ok"
-// @Param param body RegisterJsonForm true "Register from"
-// @Router /v1/auth/register [POST]
-func Register(c *gin.Context) {
+// @Param param body RegisterJsonForm true "CreateUser from"
+// @Router /v1/auth/users [POST]
+func CreateUser(c *gin.Context) {
 	registerJsonForm := RegisterJsonForm{}
 	registerJsonForm.GetJsonForm(c)
 
@@ -46,22 +46,27 @@ func Register(c *gin.Context) {
 	SuccessDataMessageStatus(c, nil, "OK!", http.StatusCreated)
 }
 
-// Login
-// @Summary Login
+// CreateSession
+// @Summary CreateSession
 // @Description Login as a user
 // @Success 200 {string} string    "ok"
-// @Param param body LoginJsonForm true "Login from"
-// @Router /v1/auth/login [POST]
-func Login(c *gin.Context) {
+// @Param param body LoginJsonForm true "CreateSession from"
+// @Router /v1/auth/sessions [POST]
+func CreateSession(c *gin.Context) {
 	loginJsonForm := LoginJsonForm{}
 	loginJsonForm.GetJsonForm(c)
 	user := &model.User{}
 	database.GetByField(&model.User{Username: loginJsonForm.Username}, user)
 	pass := checkEncrypt(user.Password, loginJsonForm.Password)
 	if pass {
-		SuccessDataMessage(c, nil, "Login Succeeded!")
+		session := model.CreateSession(user.ID)
+		err := database.Create(c, session, "session", ErrorMessageStatus)
+		if err != nil {
+			return
+		}
+		SuccessDataMessage(c, gin.H{"session_body": session.SessionBody}, "CreateSession Succeeded!")
 	} else {
-		ErrorMessageStatus(c, "Login Failed!", http.StatusUnauthorized)
+		ErrorMessageStatus(c, "CreateSession Failed!", http.StatusUnauthorized)
 	}
 }
 

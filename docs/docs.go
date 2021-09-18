@@ -32,13 +32,13 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/auth/login": {
+        "/v1/auth/sessions": {
             "post": {
                 "description": "Login as a user",
-                "summary": "Login",
+                "summary": "CreateSession",
                 "parameters": [
                     {
-                        "description": "Login from",
+                        "description": "CreateSession from",
                         "name": "param",
                         "in": "body",
                         "required": true,
@@ -57,13 +57,13 @@ var doc = `{
                 }
             }
         },
-        "/v1/auth/register": {
+        "/v1/auth/users": {
             "post": {
                 "description": "Register to create a user",
-                "summary": "Register",
+                "summary": "CreateUser",
                 "parameters": [
                     {
-                        "description": "Register from",
+                        "description": "CreateUser from",
                         "name": "param",
                         "in": "body",
                         "required": true,

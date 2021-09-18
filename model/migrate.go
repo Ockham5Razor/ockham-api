@@ -10,6 +10,7 @@ func Migrate(db *gorm.DB) {
 		&ServicePack{},
 		&Commodity{},
 		&ServicePlan{},
+		&Session{},
 	}
 
 	for i := 0; i < len(models); i++ {
