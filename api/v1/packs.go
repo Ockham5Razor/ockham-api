@@ -13,6 +13,10 @@ func SuccessData(c *gin.Context, data interface{}) {
 	SuccessDataMessage(c, data, "OK!")
 }
 
+func SuccessMessage(c *gin.Context, message string) {
+	SuccessDataMessageStatus(c, nil, message, http.StatusOK)
+}
+
 func SuccessDataMessage(c *gin.Context, data interface{}, message string) {
 	SuccessDataMessageStatus(c, data, message, http.StatusOK)
 }

@@ -16,6 +16,13 @@ definitions:
       username:
         type: string
     type: object
+  v1.ValidateEmailJsonForm:
+    properties:
+      validatorCode:
+        type: string
+      validatorKey:
+        type: string
+    type: object
 info:
   contact:
     email: support@swagger.io
@@ -29,6 +36,22 @@ info:
   title: Gol-C API
   version: "1.0"
 paths:
+  /v1/auth/email-validation/validate:
+    put:
+      description: Validate a user's email
+      parameters:
+      - description: Email validation from
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.ValidateEmailJsonForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: ValidateEmail
   /v1/auth/sessions:
     post:
       description: Login as a user
@@ -44,7 +67,7 @@ paths:
           description: ok
           schema:
             type: string
-      summary: CreateSession
+      summary: Login
   /v1/auth/users:
     post:
       description: Register to create a user
@@ -60,5 +83,5 @@ paths:
           description: ok
           schema:
             type: string
-      summary: CreateUser
+      summary: Register
 swagger: "2.0"

@@ -6,10 +6,7 @@ import (
 	"net/http"
 )
 
-type FormJson struct {
-}
-
-func (form *FormJson) GetJsonForm(c *gin.Context) {
+func GetJsonForm(c *gin.Context, form interface{}) {
 	err := c.BindJSON(form)
 
 	if err != nil {

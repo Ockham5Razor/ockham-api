@@ -22,6 +22,9 @@ type Config struct {
 		Port int
 		Sign string
 	}
+	EmailValidation struct {
+		ExpireDuration string `yaml:"expire-duration"`
+	} `yaml:"email-validation"`
 }
 
 var conf Config

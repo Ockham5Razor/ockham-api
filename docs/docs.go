@@ -32,10 +32,35 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/auth/email-validation/validate": {
+            "put": {
+                "description": "Validate a user's email",
+                "summary": "ValidateEmail",
+                "parameters": [
+                    {
+                        "description": "Email validation from",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ValidateEmailJsonForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/auth/sessions": {
             "post": {
                 "description": "Login as a user",
-                "summary": "CreateSession",
+                "summary": "Login",
                 "parameters": [
                     {
                         "description": "CreateSession from",
@@ -60,7 +85,7 @@ var doc = `{
         "/v1/auth/users": {
             "post": {
                 "description": "Register to create a user",
-                "summary": "CreateUser",
+                "summary": "Register",
                 "parameters": [
                     {
                         "description": "CreateUser from",
@@ -105,6 +130,17 @@ var doc = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.ValidateEmailJsonForm": {
+            "type": "object",
+            "properties": {
+                "validatorCode": {
+                    "type": "string"
+                },
+                "validatorKey": {
                     "type": "string"
                 }
             }

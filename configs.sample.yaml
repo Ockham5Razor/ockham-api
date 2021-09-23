@@ -12,3 +12,5 @@ email:
   host: smtp.163.com
   port: 465
   sign: gol-c
+email-validation:
+  expire-duration: 30m

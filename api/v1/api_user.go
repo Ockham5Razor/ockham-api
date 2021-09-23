@@ -8,7 +8,6 @@ import (
 )
 
 type RegisterJsonForm struct {
-	FormJson
 	Username string
 	Password string
 	Email    string
@@ -21,8 +20,8 @@ type RegisterJsonForm struct {
 // @Param param body RegisterJsonForm true "CreateUser from"
 // @Router /v1/auth/users [POST]
 func CreateUser(c *gin.Context) {
-	registerJsonForm := RegisterJsonForm{}
-	registerJsonForm.GetJsonForm(c)
+	registerJsonForm := &RegisterJsonForm{}
+	GetJsonForm(c, registerJsonForm)
 
 	user := &model.User{
 		Username:      registerJsonForm.Username,
@@ -31,15 +30,13 @@ func CreateUser(c *gin.Context) {
 		EmailVerified: false,
 	}
 
-	//rnd := randomCode()
-	//
-	//emailVerification := &model.EmailValidation{
-	//	User:          *user,
-	//	ValidatorKey:  uuid.New(),
-	//	ValidatorCode: rnd,
-	//}
-
 	err := database.Create(c, user, "user", ErrorMessageStatus)
+	if err != nil {
+		return
+	}
+
+	emailVerification := model.NewEmailValidation(user)
+	err = database.Create(c, emailVerification, "email verification", ErrorMessageStatus)
 	if err != nil {
 		return
 	}
