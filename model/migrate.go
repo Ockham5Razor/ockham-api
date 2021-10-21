@@ -7,11 +7,14 @@ import (
 func Migrate(db *gorm.DB) {
 	models := []interface{}{
 		&User{},
+		&UserWallet{},
+		&UserWalletRecord{},
 		&ServicePack{},
-		&Commodity{},
 		&ServicePlan{},
+		&ServicePlanUtilization{},
 		&Session{},
 		&EmailValidation{},
+		&Order{},
 	}
 
 	for i := 0; i < len(models); i++ {

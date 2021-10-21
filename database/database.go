@@ -6,6 +6,7 @@ import (
 	"gol-c/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var DBConn *gorm.DB
@@ -20,7 +21,11 @@ func Init() {
 	)
 	// 连接数据库
 	var err error
-	DBConn, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DBConn, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // 使用单数名称作为表名
+		},
+	})
 	if err != nil {
 		panic("Failed to connect database.")
 	}

@@ -1,10 +1,8 @@
 package model
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
-type ServicePlan struct {
+type ServicePlanUtilization struct {
 	gorm.Model
 
 	Title                 string  `gorm:"type:VARCHAR(24)"` // 标题
@@ -13,5 +11,8 @@ type ServicePlan struct {
 	CyclicalIntervalDays  int16   // 循环周期
 	InheritSurplusTraffic bool    // 循环中继承结余流量
 	TotalCycleTimes       int16   // 总循环次数
-	Price                 float32 // 价格
+	CycleTimes            int16   // 已循环次数
+	Fee                   float32 // 费用
+	UserID                uint
+	User                  User
 }
