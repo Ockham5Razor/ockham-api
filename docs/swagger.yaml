@@ -114,7 +114,14 @@ paths:
           description: ok
           schema:
             type: string
+      security:
+      - Bearer: []
       summary: Generate Recharge Codes in Batches
       tags:
       - recharge_code
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

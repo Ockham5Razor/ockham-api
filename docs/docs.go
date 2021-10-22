@@ -118,6 +118,11 @@ var doc = `{
         },
         "/v1/recharge-codes/none/batch-generations": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Generate Recharge Codes in Batches",
                 "tags": [
                     "recharge_code"
@@ -195,6 +200,13 @@ var doc = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

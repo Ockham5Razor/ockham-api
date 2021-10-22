@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"gol-c/api/v1/util"
 	"gol-c/database"
 	"gol-c/model"
 	"net/http"
@@ -22,25 +23,25 @@ type RegisterJsonForm struct {
 // @Router /v1/auth/users [POST]
 func CreateUser(c *gin.Context) {
 	registerJsonForm := &RegisterJsonForm{}
-	GetJsonForm(c, registerJsonForm)
+	util.GetJsonForm(c, registerJsonForm)
 
 	user := &model.User{
 		Username:      registerJsonForm.Username,
-		Password:      encrypt(registerJsonForm.Password),
+		Password:      util.Encrypt(registerJsonForm.Password),
 		Email:         registerJsonForm.Email,
 		EmailVerified: false,
 	}
 
-	err := database.Create(c, user, "user", ErrorMessageStatus)
+	err := database.Create(c, user, "user", util.ErrorMessageStatus)
 	if err != nil {
 		return
 	}
 
 	emailVerification := model.NewEmailValidation(user)
-	err = database.Create(c, emailVerification, "email verification", ErrorMessageStatus)
+	err = database.Create(c, emailVerification, "email verification", util.ErrorMessageStatus)
 	if err != nil {
 		return
 	}
 
-	SuccessDataMessageStatus(c, nil, "OK!", http.StatusCreated)
+	util.SuccessDataMessageStatus(c, nil, "OK!", http.StatusCreated)
 }

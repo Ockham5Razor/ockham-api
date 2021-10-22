@@ -1,11 +1,11 @@
-package v1
+package util
 
 import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func checkEncrypt(hashed string, toCheckRawString string) bool {
+func CheckEncrypt(hashed string, toCheckRawString string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(toCheckRawString))
 	if err != nil {
 		fmt.Println(err)
@@ -14,7 +14,7 @@ func checkEncrypt(hashed string, toCheckRawString string) bool {
 	return true
 }
 
-func encrypt(rawString string) string {
+func Encrypt(rawString string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(rawString), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println(err)

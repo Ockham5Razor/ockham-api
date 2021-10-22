@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"gol-c/api/v1/util"
 	"gol-c/database"
 	"gol-c/model"
 	"net/http"
@@ -22,7 +23,7 @@ type ValidateEmailJsonForm struct {
 // @Router /v1/auth/email-validations/any:validate [PUT]
 func ValidateEmail(c *gin.Context) {
 	validateEmailJsonForm := &ValidateEmailJsonForm{}
-	GetJsonForm(c, validateEmailJsonForm)
+	util.GetJsonForm(c, validateEmailJsonForm)
 
 	emailValidation := &model.EmailValidation{}
 	database.GetByField(&model.EmailValidation{ValidatorKey: validateEmailJsonForm.ValidatorKey}, &emailValidation, []string{"User"})
@@ -30,19 +31,19 @@ func ValidateEmail(c *gin.Context) {
 	if emailValidation.ValidatorCode == validateEmailJsonForm.ValidatorCode {
 		now := time.Now()
 		if now.Before(emailValidation.ExpireAt) {
-			err := database.Updates(c, emailValidation.User, &model.User{EmailVerified: true}, "user", ErrorMessageStatus)
+			err := database.Updates(c, emailValidation.User, &model.User{EmailVerified: true}, "user", util.ErrorMessageStatus)
 			if err != nil {
 				return
 			}
-			err = database.Delete(c, &model.EmailValidation{}, emailValidation.ID, "email validation", ErrorMessageStatus)
+			err = database.Delete(c, &model.EmailValidation{}, emailValidation.ID, "email validation", util.ErrorMessageStatus)
 			if err != nil {
 				return
 			}
-			SuccessMessage(c, "Email validated!")
+			util.SuccessMessage(c, "Email validated!")
 		} else {
-			ErrorMessageStatus(c, "Email validating failed: validation expired.", http.StatusGone)
+			util.ErrorMessageStatus(c, "Email validating failed: validation expired.", http.StatusGone)
 		}
 	} else {
-		ErrorMessageStatus(c, "Email validating failed: wrong validation key or code", http.StatusGone)
+		util.ErrorMessageStatus(c, "Email validating failed: wrong validation key or code", http.StatusGone)
 	}
 }
