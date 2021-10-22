@@ -16,6 +16,7 @@ type RegisterJsonForm struct {
 // CreateUser
 // @Summary Register
 // @Description Register to create a user
+// @Tags auth
 // @Success 200 {string} string    "ok"
 // @Param param body RegisterJsonForm true "CreateUser from"
 // @Router /v1/auth/users [POST]

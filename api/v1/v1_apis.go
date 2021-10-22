@@ -11,7 +11,11 @@ func ApiV1(r *gin.Engine) {
 		{
 			v1GroupAuth.POST("/users", CreateUser)
 			v1GroupAuth.POST("/sessions", CreateSession)
-			v1GroupAuth.PUT("/email-validation/validate", ValidateEmail)
+			v1GroupAuth.PUT("/email-validations/any:validate", ValidateEmail)
+		}
+		v1GroupRechargeCode := v1Group.Group("/recharge-codes")
+		{
+			v1GroupRechargeCode.POST("/none/batch-generations", GenerateRechargeCodesInBatches)
 		}
 	}
 }

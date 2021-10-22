@@ -15,6 +15,7 @@ type LoginJsonForm struct {
 // CreateSession
 // @Summary Login
 // @Description Login as a user
+// @Tags auth
 // @Success 200 {string} string    "ok"
 // @Param param body LoginJsonForm true "CreateSession from"
 // @Router /v1/auth/sessions [POST]

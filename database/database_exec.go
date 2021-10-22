@@ -23,6 +23,21 @@ func Create(c *gin.Context, value interface{}, modelName string, errorHandler fu
 	return nil
 }
 
+func CreateInBatches(c *gin.Context, value interface{}, batchSize int, modelName string, errorHandler func(c *gin.Context, message string, httpStatus int)) error {
+	if dbc := DBConn.CreateInBatches(value, batchSize); dbc.Error != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(dbc.Error, &mysqlErr) && mysqlErr.Number == 1062 {
+			msg := fmt.Sprintf("Create %s failed: already exists.", modelName)
+			errorHandler(c, msg, http.StatusConflict)
+			return dbc.Error
+		}
+		msg := fmt.Sprintf("Create %s failed: unkown error.", modelName)
+		errorHandler(c, fmt.Sprintf(msg, modelName), http.StatusInternalServerError)
+		return dbc.Error
+	}
+	return nil
+}
+
 func Delete(c *gin.Context, model interface{}, toDeleteID uint, modelName string, errorHandler func(c *gin.Context, message string, httpStatus int)) error {
 	if dbc := DBConn.Delete(model, toDeleteID); dbc.Error != nil {
 		msg := fmt.Sprintf("Delete %s failed: unkown error.", modelName)

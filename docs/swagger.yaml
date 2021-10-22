@@ -7,6 +7,15 @@ definitions:
       username:
         type: string
     type: object
+  v1.RechargeCodeGeneratingJsonForm:
+    properties:
+      batchCount:
+        type: integer
+      packageName:
+        type: string
+      rechargeAmount:
+        type: number
+    type: object
   v1.RegisterJsonForm:
     properties:
       email:
@@ -36,7 +45,7 @@ info:
   title: Gol-C API
   version: "1.0"
 paths:
-  /v1/auth/email-validation/validate:
+  /v1/auth/email-validations/any:validate:
     put:
       description: Validate a user's email
       parameters:
@@ -52,6 +61,8 @@ paths:
           schema:
             type: string
       summary: ValidateEmail
+      tags:
+      - auth
   /v1/auth/sessions:
     post:
       description: Login as a user
@@ -68,6 +79,8 @@ paths:
           schema:
             type: string
       summary: Login
+      tags:
+      - auth
   /v1/auth/users:
     post:
       description: Register to create a user
@@ -84,4 +97,24 @@ paths:
           schema:
             type: string
       summary: Register
+      tags:
+      - auth
+  /v1/recharge-codes/none/batch-generations:
+    post:
+      description: Generate Recharge Codes in Batches
+      parameters:
+      - description: Generating recharge code from
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RechargeCodeGeneratingJsonForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Generate Recharge Codes in Batches
+      tags:
+      - recharge_code
 swagger: "2.0"

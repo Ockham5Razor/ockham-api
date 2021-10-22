@@ -16,9 +16,10 @@ type ValidateEmailJsonForm struct {
 // ValidateEmail
 // @Summary ValidateEmail
 // @Description Validate a user's email
+// @Tags auth
 // @Success 200 {string} string    "ok"
 // @Param param body ValidateEmailJsonForm true "Email validation from"
-// @Router /v1/auth/email-validation/validate [PUT]
+// @Router /v1/auth/email-validations/any:validate [PUT]
 func ValidateEmail(c *gin.Context) {
 	validateEmailJsonForm := &ValidateEmailJsonForm{}
 	GetJsonForm(c, validateEmailJsonForm)

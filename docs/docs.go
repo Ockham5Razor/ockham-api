@@ -32,9 +32,12 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/auth/email-validation/validate": {
+        "/v1/auth/email-validations/any:validate": {
             "put": {
                 "description": "Validate a user's email",
+                "tags": [
+                    "auth"
+                ],
                 "summary": "ValidateEmail",
                 "parameters": [
                     {
@@ -60,6 +63,9 @@ var doc = `{
         "/v1/auth/sessions": {
             "post": {
                 "description": "Login as a user",
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Login",
                 "parameters": [
                     {
@@ -85,6 +91,9 @@ var doc = `{
         "/v1/auth/users": {
             "post": {
                 "description": "Register to create a user",
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Register",
                 "parameters": [
                     {
@@ -94,6 +103,34 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/v1.RegisterJsonForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/recharge-codes/none/batch-generations": {
+            "post": {
+                "description": "Generate Recharge Codes in Batches",
+                "tags": [
+                    "recharge_code"
+                ],
+                "summary": "Generate Recharge Codes in Batches",
+                "parameters": [
+                    {
+                        "description": "Generating recharge code from",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.RechargeCodeGeneratingJsonForm"
                         }
                     }
                 ],
@@ -117,6 +154,20 @@ var doc = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.RechargeCodeGeneratingJsonForm": {
+            "type": "object",
+            "properties": {
+                "batchCount": {
+                    "type": "integer"
+                },
+                "packageName": {
+                    "type": "string"
+                },
+                "rechargeAmount": {
+                    "type": "number"
                 }
             }
         },
