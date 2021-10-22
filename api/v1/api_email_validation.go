@@ -26,9 +26,9 @@ func ValidateEmail(c *gin.Context) {
 	util.GetJsonForm(c, validateEmailJsonForm)
 
 	emailValidation := &model.EmailValidation{}
-	database.GetByField(&model.EmailValidation{ValidatorKey: validateEmailJsonForm.ValidatorKey}, &emailValidation, []string{"User"})
+	database.GetByField(&model.EmailValidation{ValidationKey: validateEmailJsonForm.ValidatorKey}, &emailValidation, []string{"User"})
 
-	if emailValidation.ValidatorCode == validateEmailJsonForm.ValidatorCode {
+	if emailValidation.ValidationCode == validateEmailJsonForm.ValidatorCode {
 		now := time.Now()
 		if now.Before(emailValidation.ExpireAt) {
 			err := database.Updates(c, emailValidation.User, &model.User{EmailVerified: true}, "user", util.ErrorMessageStatus)

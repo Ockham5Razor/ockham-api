@@ -12,11 +12,11 @@ import (
 
 type EmailValidation struct {
 	gorm.Model
-	UserID        uint
-	User          User
-	ValidatorKey  string
-	ValidatorCode string
-	ExpireAt      time.Time
+	UserID         uint
+	User           User
+	ValidationKey  string
+	ValidationCode string
+	ExpireAt       time.Time
 }
 
 func NewEmailValidation(user *User) *EmailValidation {
@@ -26,10 +26,10 @@ func NewEmailValidation(user *User) *EmailValidation {
 		panic(fmt.Sprintf("Email validation code expire duration error, config value is: '%v'!", expireDuration))
 	}
 	emailVerification := &EmailValidation{
-		User:          *user,
-		ValidatorKey:  uuid.New(),
-		ValidatorCode: randomCode(),
-		ExpireAt:      time.Now().Add(duration),
+		User:           *user,
+		ValidationKey:  uuid.New(),
+		ValidationCode: randomCode(),
+		ExpireAt:       time.Now().Add(duration),
 	}
 	return emailVerification
 }

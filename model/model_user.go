@@ -8,6 +8,7 @@ type User struct {
 	Password      string `gorm:"type:VARCHAR(128)"`
 	Email         string `gorm:"type:VARCHAR(128)"`
 	EmailVerified bool
+	Roles         []Role `gorm:"many2many:user_role;"`
 }
 
 type Role struct {

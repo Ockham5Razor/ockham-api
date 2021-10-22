@@ -6,6 +6,7 @@ import (
 
 func Migrate(db *gorm.DB) {
 	models := []interface{}{
+		&Role{},
 		&User{},
 		&UserWallet{},
 		&UserWalletRecord{},

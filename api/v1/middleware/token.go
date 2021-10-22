@@ -27,6 +27,8 @@ func Token() gin.HandlerFunc {
 		session := &model.Session{}
 		database.GetByField(&model.Session{SessionBody: parts[1]}, session, []string{"User"})
 		c.Set("session", session)
+		c.Set("user", session.User)
+
 		c.Next()
 	}
 }
