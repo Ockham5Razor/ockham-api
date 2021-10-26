@@ -12,5 +12,7 @@ email:
   host: smtp.163.com
   port: 465
   sign: gol-c
-email-validation:
-  expire-duration: 30m
+email_validation:
+  expire_duration: 30m
+auth:
+  jwt_secret: aSyIjIQnv1LT7zEnSv0A # Use your own random password

@@ -23,8 +23,11 @@ type Config struct {
 		Sign string
 	}
 	EmailValidation struct {
-		ExpireDuration string `yaml:"expire-duration"`
-	} `yaml:"email-validation"`
+		ExpireDuration string
+	}
+	Auth struct {
+		JwtSecret string
+	}
 }
 
 var conf Config

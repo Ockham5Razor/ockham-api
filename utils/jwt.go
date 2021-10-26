@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"gol-c/config"
 	"time"
 )
 
@@ -18,7 +19,7 @@ type MyClaims struct {
 
 const TokenExpireDuration = time.Hour * 2
 
-var MySecret = []byte("夏天夏天悄悄过去")
+var jwtSecret = []byte(config.GetConfig().Auth.JwtSecret)
 
 // GenToken 生成JWT
 func GenToken(username string) (string, error) {
@@ -33,14 +34,14 @@ func GenToken(username string) (string, error) {
 	// 使用指定的签名方法创建签名对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	// 使用指定的secret签名并获得完整的编码后的字符串token
-	return token.SignedString(MySecret)
+	return token.SignedString(jwtSecret)
 }
 
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*MyClaims, error) {
 	// 解析token
 	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return MySecret, nil
+		return jwtSecret, nil
 	})
 	if err != nil {
 		return nil, err
