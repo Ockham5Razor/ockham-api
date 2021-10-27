@@ -69,12 +69,40 @@ var doc = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "description": "CreateSession from",
+                        "description": "Login json form",
                         "name": "param",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/v1.LoginJsonForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/sessions/any:renew": {
+            "put": {
+                "description": "Keep login status as a user.",
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Keep login status",
+                "parameters": [
+                    {
+                        "description": "session renewal form",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.RenewSessionForm"
                         }
                     }
                 ],
@@ -186,6 +214,14 @@ var doc = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.RenewSessionForm": {
+            "type": "object",
+            "properties": {
+                "renewalKey": {
                     "type": "string"
                 }
             }

@@ -15,4 +15,10 @@ email:
 email_validation:
   expire_duration: 30m
 auth:
-  jwt_secret: aSyIjIQnv1LT7zEnSv0A # Use your own random password
+  session:
+    expire_seconds: 7200
+    maximum_renewal_times: 3
+  jwt:
+    issuer: gol-c
+    secret: aSyIjIQnv1LT7zEnSv0A # Use your own random password
+    expire_seconds: 1800

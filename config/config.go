@@ -4,6 +4,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"log"
 	"sync"
+	"time"
 )
 
 type Config struct {
@@ -23,10 +24,18 @@ type Config struct {
 		Sign string
 	}
 	EmailValidation struct {
-		ExpireDuration string
-	}
+		ExpireDuration string `yaml:"expire_duration"`
+	} `yaml:"email_validation"`
 	Auth struct {
-		JwtSecret string
+		Session struct {
+			ExpireSeconds       time.Duration `yaml:"expire_seconds"`
+			MaximumRenewalTimes int           `yaml:"maximum_renewal_times"`
+		}
+		Jwt struct {
+			Issuer        string
+			Secret        string
+			ExpireSeconds time.Duration `yaml:"expire_seconds"`
+		}
 	}
 }
 

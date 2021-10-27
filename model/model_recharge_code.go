@@ -2,7 +2,7 @@ package model
 
 import (
 	"database/sql"
-	"gol-c/utils"
+	"gol-c/util"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +18,7 @@ type RechargeCode struct {
 func GenRechargeCode(packageName string, rechargeAmount float32) *RechargeCode {
 	return &RechargeCode{
 		PackageName:    packageName,
-		RechargeCode:   utils.GenString(),
+		RechargeCode:   util.GenString(),
 		RechargeAmount: rechargeAmount,
 		Used:           false,
 	}

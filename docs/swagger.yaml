@@ -25,6 +25,11 @@ definitions:
       username:
         type: string
     type: object
+  v1.RenewSessionForm:
+    properties:
+      renewalKey:
+        type: string
+    type: object
   v1.ValidateEmailJsonForm:
     properties:
       validatorCode:
@@ -67,7 +72,7 @@ paths:
     post:
       description: Login as a user
       parameters:
-      - description: CreateSession from
+      - description: Login json form
         in: body
         name: param
         required: true
@@ -79,6 +84,24 @@ paths:
           schema:
             type: string
       summary: Login
+      tags:
+      - auth
+  /v1/auth/sessions/any:renew:
+    put:
+      description: Keep login status as a user.
+      parameters:
+      - description: session renewal form
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RenewSessionForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Keep login status
       tags:
       - auth
   /v1/auth/users:

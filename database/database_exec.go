@@ -47,6 +47,15 @@ func Delete(c *gin.Context, model interface{}, toDeleteID uint, modelName string
 	return nil
 }
 
+func Update(c *gin.Context, toSave interface{}, modelName string, errorHandler func(c *gin.Context, message string, httpStatus int)) error {
+	if dbc := DBConn.Save(toSave); dbc.Error != nil {
+		msg := fmt.Sprintf("Update %s failed: unkown error.", modelName)
+		errorHandler(c, fmt.Sprintf(msg, modelName), http.StatusInternalServerError)
+		return dbc.Error
+	}
+	return nil
+}
+
 func Updates(c *gin.Context, whereFields interface{}, saveFields interface{}, modelName string, errorHandler func(c *gin.Context, message string, httpStatus int)) error {
 	if dbc := DBConn.Model(whereFields).Updates(saveFields); dbc.Error != nil {
 		msg := fmt.Sprintf("Update %s failed: unkown error.", modelName)
