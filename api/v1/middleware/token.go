@@ -3,8 +3,6 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"gol-c/api/v1/util"
-	"gol-c/database"
-	"gol-c/model"
 	"net/http"
 	"strings"
 )
@@ -23,12 +21,8 @@ func Token() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
-		session := &model.Session{}
-		database.GetByField(&model.Session{SessionToken: parts[1]}, session, []string{"User"})
-		c.Set("session", session)
-		c.Set("user", session.User)
-
+		token := parts[1]
+		c.Set("token", token)
 		c.Next()
 	}
 }

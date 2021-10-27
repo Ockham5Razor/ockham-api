@@ -17,7 +17,12 @@ func ApiV1(r *gin.Engine) {
 		}
 		v1GroupRechargeCode := v1Group.Group("/recharge-codes")
 		{
-			v1GroupRechargeCode.POST("/none/batch-generations", middleware.Token(), GenerateRechargeCodesInBatches)
+			v1GroupRechargeCode.POST(
+				"/none/batch-generations",
+				middleware.Token(),
+				middleware.HasAllAuthorities("admin"),
+				GenerateRechargeCodesInBatches,
+			)
 		}
 	}
 }
