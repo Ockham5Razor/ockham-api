@@ -19,7 +19,8 @@ type RechargeCodeGeneratingJsonForm struct {
 // @Description Generate Recharge Codes in Batches
 // @Tags recharge_code
 // @Security Bearer
-// @Success 200 {string} string    "ok"
+// @Success 201 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
 // @Param param body RechargeCodeGeneratingJsonForm true "Generating recharge code from"
 // @Router /v1/recharge-codes/none/batch-generations [POST]
 func GenerateRechargeCodesInBatches(c *gin.Context) {

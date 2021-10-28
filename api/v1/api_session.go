@@ -19,7 +19,8 @@ type LoginJsonForm struct {
 // @Summary Login
 // @Description Login as a user
 // @Tags auth
-// @Success 200 {string} string    "ok"
+// @Success 201 {object} util.Pack
+// @Failure 401,409,500 {object} util.Pack
 // @Param param body LoginJsonForm true "Login json form"
 // @Router /v1/auth/sessions [POST]
 func CreateSession(c *gin.Context) {
@@ -35,7 +36,7 @@ func CreateSession(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			util.SuccessPack(c).WithData(gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}).WithMessage("Create session succeeded!").Responds()
+			util.SuccessPack(c).WithData(gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}).WithHttpResponseCode(http.StatusCreated).WithMessage("Create session succeeded!").Responds()
 		} else {
 			util.ErrorPack(c).WithMessage("Create session failed: email not verified!").WithHttpResponseCode(http.StatusUnauthorized).Responds()
 		}
@@ -52,7 +53,8 @@ type RenewSessionForm struct {
 // @Summary Keep login status
 // @Description Keep login status as a user.
 // @Tags auth
-// @Success 200 {string} string    "ok"
+// @Success 201 {object} util.Pack
+// @Failure 403,409,500 {object} util.Pack
 // @Param param body RenewSessionForm true "session renewal form"
 // @Router /v1/auth/sessions/any:renew [PUT]
 func RenewSession(c *gin.Context) {

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type meta struct {
+type Meta struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
@@ -12,7 +12,7 @@ type meta struct {
 type Pack struct {
 	context          *gin.Context
 	httpResponseCode int
-	Meta             meta        `json:"meta"`
+	Meta             Meta        `json:"Meta"`
 	Data             interface{} `json:"data"`
 }
 
@@ -20,7 +20,7 @@ func SuccessPack(c *gin.Context) *Pack {
 	return &Pack{
 		context:          c,
 		httpResponseCode: 200,
-		Meta: meta{
+		Meta: Meta{
 			Success: true,
 			Message: "OK!",
 		},
@@ -32,7 +32,7 @@ func ErrorPack(c *gin.Context) *Pack {
 	return &Pack{
 		context:          c,
 		httpResponseCode: 400,
-		Meta: meta{
+		Meta: Meta{
 			Success: false,
 			Message: "ERROR!",
 		},

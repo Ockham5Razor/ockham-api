@@ -18,7 +18,8 @@ type RegisterJsonForm struct {
 // @Summary Register
 // @Description Register to create a user
 // @Tags auth
-// @Success 200 {string} string    "ok"
+// @Success 201 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
 // @Param param body RegisterJsonForm true "CreateUser from"
 // @Router /v1/auth/users [POST]
 func CreateUser(c *gin.Context) {

@@ -17,6 +17,7 @@ import (
 // @Tags wallet
 // @Security Bearer
 // @Success 200 {object} util.Pack
+// @Failure 400 {object} util.Pack
 // @Router /v1/users/me/wallet [GET]
 func GetWalletInfo(c *gin.Context) {
 	user, userExists := c.Get("user")
@@ -37,6 +38,7 @@ func GetWalletInfo(c *gin.Context) {
 // @Tags wallet
 // @Security Bearer
 // @Success 200 {object} util.Pack
+// @Failure 400 {object} util.Pack
 // @Router /v1/users/me/wallet/records [GET]
 func GetRecordsOfWallet(c *gin.Context) {
 	user, userExists := c.Get("user")
@@ -60,7 +62,8 @@ type RechargeForm struct {
 // @Description Register to create a user
 // @Tags wallet
 // @security Bearer
-// @Success 200 {object} util.Pack
+// @Success 201 {object} util.Pack
+// @Failure 403,410 {object} util.Pack
 // @Param param body RechargeForm true "Recharge form"
 // @Router /v1/users/me/wallet:recharge [PUT]
 func RechargeWallet(c *gin.Context) {

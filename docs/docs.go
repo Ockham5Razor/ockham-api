@@ -52,9 +52,15 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "410": {
+                        "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -79,10 +85,28 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -107,10 +131,28 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -135,10 +177,22 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -168,10 +222,22 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -212,6 +278,12 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/util.Pack"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
                     }
                 }
             }
@@ -231,6 +303,12 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/util.Pack"
                         }
@@ -262,8 +340,20 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "410": {
+                        "description": "Gone",
                         "schema": {
                             "$ref": "#/definitions/util.Pack"
                         }
@@ -273,18 +363,7 @@ var doc = `{
         }
     },
     "definitions": {
-        "util.Pack": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object"
-                },
-                "meta": {
-                    "$ref": "#/definitions/util.meta"
-                }
-            }
-        },
-        "util.meta": {
+        "util.Meta": {
             "type": "object",
             "properties": {
                 "message": {
@@ -292,6 +371,17 @@ var doc = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "util.Pack": {
+            "type": "object",
+            "properties": {
+                "Meta": {
+                    "$ref": "#/definitions/util.Meta"
+                },
+                "data": {
+                    "type": "object"
                 }
             }
         },
