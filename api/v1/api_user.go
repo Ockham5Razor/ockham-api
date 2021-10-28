@@ -43,5 +43,5 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	util.SuccessDataMessageStatus(c, nil, "OK!", http.StatusCreated)
+	util.SuccessPack(c).WithHttpResponseCode(http.StatusCreated).Responds()
 }

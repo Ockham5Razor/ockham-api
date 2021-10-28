@@ -30,5 +30,10 @@ func ApiV1(r *gin.Engine) {
 			v1GroupWallet.PUT("/users/me/wallet:recharge", middleware.Token(), middleware.HasAnyRole("user"), RechargeWallet)
 			v1GroupWallet.GET("/users/me/wallet/records", middleware.Token(), middleware.HasAnyRole("user"), GetRecordsOfWallet)
 		}
+		v1GroupServicePlans := v1Group.Group("/")
+		{
+			v1GroupServicePlans.GET("/service-plans", ListServicePlans)
+			//v1GroupServicePlans.POST("/service-plans", middleware.Token(), middleware.HasAnyRole("admin"), CreateServicePlan)
+		}
 	}
 }

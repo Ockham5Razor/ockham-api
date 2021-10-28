@@ -11,7 +11,7 @@ func GetJsonForm(c *gin.Context, form interface{}) {
 
 	if err != nil {
 		log.Printf("JSON format not allowed!")
-		ErrorMessageStatus(c, "JSON format not allowed!", http.StatusBadRequest)
+		ErrorPack(c).WithMessage("JSON format not allowed!").WithHttpResponseCode(http.StatusBadRequest).Responds()
 		return
 	}
 }

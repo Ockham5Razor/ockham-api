@@ -39,11 +39,11 @@ func ValidateEmail(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			util.SuccessMessage(c, "Email validated!")
+			util.SuccessPack(c).WithMessage("Email validated!").Responds()
 		} else {
-			util.ErrorMessageStatus(c, "Email validating failed: validation expired.", http.StatusGone)
+			util.ErrorPack(c).WithMessage("Email validating failed: validation expired.").WithHttpResponseCode(http.StatusGone).Responds()
 		}
 	} else {
-		util.ErrorMessageStatus(c, "Email validating failed: wrong validation key or code", http.StatusGone)
+		util.ErrorPack(c).WithMessage("Email validating failed: wrong validation key or code").WithHttpResponseCode(http.StatusGone).Responds()
 	}
 }

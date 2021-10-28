@@ -5,6 +5,7 @@ import (
 	"gol-c/api/v1/util"
 	"gol-c/database"
 	"gol-c/model"
+	"net/http"
 )
 
 type RechargeCodeGeneratingJsonForm struct {
@@ -32,5 +33,5 @@ func GenerateRechargeCodesInBatches(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	util.SuccessDataMessage(c, gin.H{}, "Generate recharge codes in batches succeeded!")
+	util.SuccessPack(c).WithMessage("Generate recharge codes in batches succeeded!").WithHttpResponseCode(http.StatusCreated).Responds()
 }

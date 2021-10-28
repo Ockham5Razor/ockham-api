@@ -16,7 +16,7 @@ import (
 // @Description Get wallet info
 // @Tags wallet
 // @Security Bearer
-// @Success 200 {object} model.UserWallet
+// @Success 200 {object} util.Pack
 // @Router /v1/users/me/wallet [GET]
 func GetWalletInfo(c *gin.Context) {
 	user, userExists := c.Get("user")
@@ -24,9 +24,9 @@ func GetWalletInfo(c *gin.Context) {
 		userObj := user.(*model.User)
 		wallet := &model.UserWallet{}
 		database.DBConn.FirstOrCreate(wallet, model.UserWallet{UserID: userObj.ID})
-		util.SuccessDataMessage(c, wallet, "OK!")
+		util.SuccessPack(c).WithData(wallet).Responds()
 	} else {
-		util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use current user middleware first.", http.StatusBadRequest)
+		util.ErrorPack(c).WithData("Token extracting failed, maybe you should use current user middleware first.").WithHttpResponseCode(http.StatusBadRequest).Responds()
 		c.Abort()
 	}
 }
@@ -36,7 +36,7 @@ func GetWalletInfo(c *gin.Context) {
 // @Description Get wallet records
 // @Tags wallet
 // @Security Bearer
-// @Success 200 {array} []model.UserWalletRecord
+// @Success 200 {object} util.Pack
 // @Router /v1/users/me/wallet/records [GET]
 func GetRecordsOfWallet(c *gin.Context) {
 	user, userExists := c.Get("user")
@@ -44,9 +44,9 @@ func GetRecordsOfWallet(c *gin.Context) {
 		userObj := user.(*model.User)
 		walletRecords := &[]model.UserWalletRecord{}
 		database.DBConn.Order("created_at DESC").Find(walletRecords, model.UserWalletRecord{UserID: userObj.ID})
-		util.SuccessDataMessage(c, walletRecords, "OK!")
+		util.SuccessPack(c).WithData(walletRecords).Responds()
 	} else {
-		util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use current user middleware first.", http.StatusBadRequest)
+		util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use current user middleware first.").WithHttpResponseCode(http.StatusBadRequest).Responds()
 		c.Abort()
 	}
 }
@@ -60,7 +60,7 @@ type RechargeForm struct {
 // @Description Register to create a user
 // @Tags wallet
 // @security Bearer
-// @Success 200 {string} string    "ok"
+// @Success 200 {object} util.Pack
 // @Param param body RechargeForm true "Recharge form"
 // @Router /v1/users/me/wallet:recharge [PUT]
 func RechargeWallet(c *gin.Context) {
@@ -76,12 +76,12 @@ func RechargeWallet(c *gin.Context) {
 
 		err := recharge(rechargeForm.RechargeCode, userID)
 		if err == nil {
-			util.SuccessMessage(c, "Recharging success!")
+			util.SuccessPack(c).WithMessage("Recharging succeeded!").WithHttpResponseCode(http.StatusCreated).Responds()
 		} else {
-			util.ErrorMessageStatus(c, fmt.Sprintf("Recharging failed: %s.", err.Error()), http.StatusGone)
+			util.ErrorPack(c).WithMessage(fmt.Sprintf("Recharging failed: %s.", err.Error())).WithHttpResponseCode(http.StatusGone).Responds()
 		}
 	} else {
-		util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use current user middleware first.", http.StatusBadRequest)
+		util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use current user middleware first.").WithHttpResponseCode(http.StatusBadRequest).Responds()
 	}
 }
 

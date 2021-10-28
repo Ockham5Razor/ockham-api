@@ -35,12 +35,12 @@ func CreateSession(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			util.SuccessDataMessage(c, gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}, "Create session succeeded!")
+			util.SuccessPack(c).WithData(gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}).WithMessage("Create session succeeded!").Responds()
 		} else {
-			util.ErrorMessageStatus(c, "Create session failed: email not verified!", http.StatusUnauthorized)
+			util.ErrorPack(c).WithMessage("Create session failed: email not verified!").WithHttpResponseCode(http.StatusUnauthorized).Responds()
 		}
 	} else {
-		util.ErrorMessageStatus(c, "Create session failed: wrong username or password!", http.StatusUnauthorized)
+		util.ErrorPack(c).WithMessage("Create session failed: wrong username or password!").WithHttpResponseCode(http.StatusUnauthorized).Responds()
 	}
 }
 
@@ -69,11 +69,11 @@ func RenewSession(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			util.SuccessDataMessage(c, gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}, "Renew session succeeded!")
+			util.SuccessPack(c).WithData(gin.H{"renewal_code": session.SessionKey, "token_body": session.SessionToken}).WithMessage("Renew session succeeded!").WithHttpResponseCode(http.StatusCreated).Responds()
 		} else {
-			util.ErrorMessageStatus(c, "Session renewing failed, reached maximum renewal times.", http.StatusForbidden)
+			util.ErrorPack(c).WithMessage("Session renewing failed: reached maximum renewal times.").WithHttpResponseCode(http.StatusForbidden)
 		}
 	} else {
-		util.ErrorMessageStatus(c, "Session expired, renewing failed.", http.StatusForbidden)
+		util.ErrorPack(c).WithMessage("Session renewing failed: session expired.").WithHttpResponseCode(http.StatusForbidden)
 	}
 }

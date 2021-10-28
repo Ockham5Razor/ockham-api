@@ -177,6 +177,23 @@ var doc = `{
                 }
             }
         },
+        "/v1/service-plans": {
+            "get": {
+                "description": "Get all service plans",
+                "tags": [
+                    "market"
+                ],
+                "summary": "Get all service plans",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/wallet": {
             "get": {
                 "security": [
@@ -191,9 +208,9 @@ var doc = `{
                 "summary": "Get wallet info",
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -213,9 +230,9 @@ var doc = `{
                 "summary": "Get wallet records",
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -246,9 +263,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/util.Pack"
                         }
                     }
                 }
@@ -256,6 +273,28 @@ var doc = `{
         }
     },
     "definitions": {
+        "util.Pack": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "meta": {
+                    "$ref": "#/definitions/util.meta"
+                }
+            }
+        },
+        "util.meta": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "v1.LoginJsonForm": {
             "type": "object",
             "properties": {

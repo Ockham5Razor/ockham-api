@@ -17,7 +17,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -34,7 +34,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			for i := range neededRoles {
 				_, hasOneNeededRole := hasRoleSet[strings.ToLower(neededRoles[i])]
 				if !hasOneNeededRole {
-					apiV1Util.ErrorMessageStatus(c, "User not authorized as "+neededRoles[i], http.StatusForbidden)
+					apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("User not authorized as %s", neededRoles[i])).WithHttpResponseCode(http.StatusForbidden).Responds()
 					c.Abort()
 					return
 				}
@@ -42,7 +42,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			c.Next()
 			return
 		} else {
-			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
+			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
 			c.Abort()
 			return
 		}
@@ -55,7 +55,7 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -76,11 +76,11 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 					return
 				}
 			}
-			apiV1Util.ErrorMessageStatus(c, "User is not authorized as any required roles.", http.StatusForbidden)
+			apiV1Util.ErrorPack(c).WithMessage("User is not authorized as any required roles.").WithHttpResponseCode(http.StatusForbidden).Responds()
 			c.Abort()
 			return
 		} else {
-			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
+			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
 			c.Abort()
 			return
 		}
@@ -93,7 +93,7 @@ func CurrentUser() gin.HandlerFunc {
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -103,7 +103,7 @@ func CurrentUser() gin.HandlerFunc {
 			c.Set("user", user)
 			c.Next()
 		} else {
-			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
+			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
 			c.Abort()
 			return
 		}

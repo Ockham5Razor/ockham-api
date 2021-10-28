@@ -1,5 +1,19 @@
 basePath: /api
 definitions:
+  util.Pack:
+    properties:
+      data:
+        type: object
+      meta:
+        $ref: '#/definitions/util.meta'
+    type: object
+  util.meta:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   v1.LoginJsonForm:
     properties:
       password:
@@ -147,14 +161,25 @@ paths:
       summary: Generate Recharge Codes in Batches
       tags:
       - recharge_code
+  /v1/service-plans:
+    get:
+      description: Get all service plans
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: Get all service plans
+      tags:
+      - market
   /v1/users/me/wallet:
     get:
       description: Get wallet info
       responses:
         "200":
-          description: ok
+          description: OK
           schema:
-            type: string
+            $ref: '#/definitions/util.Pack'
       security:
       - Bearer: []
       summary: Get wallet info
@@ -165,9 +190,9 @@ paths:
       description: Get wallet records
       responses:
         "200":
-          description: ok
+          description: OK
           schema:
-            type: string
+            $ref: '#/definitions/util.Pack'
       security:
       - Bearer: []
       summary: Get wallet records
@@ -185,9 +210,9 @@ paths:
           $ref: '#/definitions/v1.RechargeForm'
       responses:
         "200":
-          description: ok
+          description: OK
           schema:
-            type: string
+            $ref: '#/definitions/util.Pack'
       security:
       - Bearer: []
       summary: Recharge

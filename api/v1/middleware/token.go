@@ -11,13 +11,13 @@ func Token() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			util.ErrorMessageStatus(c, "HTTP header `Authorization` is required for this request.", http.StatusBadRequest)
+			util.ErrorPack(c).WithMessage("HTTP header `Authorization` is required for this request.").WithHttpResponseCode(http.StatusBadRequest).Responds()
 			c.Abort()
 			return
 		}
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			util.ErrorMessageStatus(c, "HTTP header `Authorization` is in illegal format.", http.StatusBadRequest)
+			util.ErrorPack(c).WithMessage("HTTP header `Authorization` is in illegal format.").WithHttpResponseCode(http.StatusBadRequest).Responds()
 			c.Abort()
 			return
 		}
