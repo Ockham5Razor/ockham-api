@@ -28,6 +28,7 @@ func ApiV1(r *gin.Engine) {
 		{
 			v1GroupWallet.GET("/users/me/wallet", middleware.Token(), middleware.HasAnyRole("user"), GetWalletInfo)
 			v1GroupWallet.PUT("/users/me/wallet:recharge", middleware.Token(), middleware.HasAnyRole("user"), RechargeWallet)
+			v1GroupWallet.GET("/users/me/wallet/records", middleware.Token(), middleware.HasAnyRole("user"), GetRecordsOfWallet)
 		}
 	}
 }

@@ -16,15 +16,35 @@ import (
 // @Description Get wallet info
 // @Tags wallet
 // @Security Bearer
-// @Success 200 {string} string    "ok"
+// @Success 200 {object} model.UserWallet
 // @Router /v1/users/me/wallet [GET]
 func GetWalletInfo(c *gin.Context) {
 	user, userExists := c.Get("user")
 	if userExists {
 		userObj := user.(*model.User)
 		wallet := &model.UserWallet{}
-		database.DBConn.FirstOrCreate(wallet, &model.UserWallet{UserID: userObj.ID})
-		util.SuccessDataMessage(c, gin.H{"balance": wallet.Balance}, "OK!")
+		database.DBConn.FirstOrCreate(wallet, model.UserWallet{UserID: userObj.ID})
+		util.SuccessDataMessage(c, wallet, "OK!")
+	} else {
+		util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use current user middleware first.", http.StatusBadRequest)
+		c.Abort()
+	}
+}
+
+// GetRecordsOfWallet
+// @Summary Get wallet records
+// @Description Get wallet records
+// @Tags wallet
+// @Security Bearer
+// @Success 200 {array} []model.UserWalletRecord
+// @Router /v1/users/me/wallet/records [GET]
+func GetRecordsOfWallet(c *gin.Context) {
+	user, userExists := c.Get("user")
+	if userExists {
+		userObj := user.(*model.User)
+		walletRecords := &[]model.UserWalletRecord{}
+		database.DBConn.Order("created_at DESC").Find(walletRecords, model.UserWalletRecord{UserID: userObj.ID})
+		util.SuccessDataMessage(c, walletRecords, "OK!")
 	} else {
 		util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use current user middleware first.", http.StatusBadRequest)
 		c.Abort()

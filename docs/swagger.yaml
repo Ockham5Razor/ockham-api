@@ -160,6 +160,19 @@ paths:
       summary: Get wallet info
       tags:
       - wallet
+  /v1/users/me/wallet/records:
+    get:
+      description: Get wallet records
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Get wallet records
+      tags:
+      - wallet
   /v1/users/me/wallet:recharge:
     put:
       description: Register to create a user

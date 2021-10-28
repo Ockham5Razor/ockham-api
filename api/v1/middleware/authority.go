@@ -23,13 +23,12 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			}
 			username := jwtClaims.Username
 			user := &model.User{}
-			database.DBConn.Debug().Preload("Roles").First(user, &model.User{Username: username})
+			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
 			c.Set("user", user)
 
 			hasRoleSet := make(map[string]bool)
 			roles := user.Roles
 			for i := range roles {
-				fmt.Println(roles[i].RoleName)
 				hasRoleSet[strings.ToLower(roles[i].RoleName)] = true
 			}
 			for i := range neededRoles {
@@ -41,6 +40,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 				}
 			}
 			c.Next()
+			return
 		} else {
 			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
 			c.Abort()
@@ -61,22 +61,22 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 			}
 			username := jwtClaims.Username
 			user := &model.User{}
-			database.DBConn.Debug().Preload("Roles").First(user, &model.User{Username: username})
+			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
 			c.Set("user", user)
 
 			hasRoleSet := make(map[string]bool)
 			roles := user.Roles
 			for i := range roles {
-				fmt.Println(roles[i].RoleName)
 				hasRoleSet[strings.ToLower(roles[i].RoleName)] = true
 			}
 			for i := range neededRoles {
 				_, hasOneNeededRole := hasRoleSet[strings.ToLower(neededRoles[i])]
 				if hasOneNeededRole {
-					apiV1Util.ErrorMessageStatus(c, "User not authorized as "+neededRoles[i], http.StatusForbidden)
 					c.Next()
+					return
 				}
 			}
+			apiV1Util.ErrorMessageStatus(c, "User is not authorized as any required roles.", http.StatusForbidden)
 			c.Abort()
 			return
 		} else {

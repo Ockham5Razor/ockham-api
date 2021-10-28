@@ -199,6 +199,28 @@ var doc = `{
                 }
             }
         },
+        "/v1/users/me/wallet/records": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get wallet records",
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Get wallet records",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/wallet:recharge": {
             "put": {
                 "security": [
