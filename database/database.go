@@ -32,4 +32,6 @@ func Init() {
 
 	// 移植数据库
 	model.Migrate(DBConn)
+	// 初始化数据
+	model.InitData(DBConn)
 }
