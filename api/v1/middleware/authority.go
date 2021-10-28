@@ -11,36 +11,101 @@ import (
 	"strings"
 )
 
-func HasAllAuthorities(neededAuthorities ...string) gin.HandlerFunc {
+func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 设置为 SET
-		//neededAuthoritySet := make(map[string]bool)
-		//for i := range neededAuthorities {
-		//	neededAuthoritySet[string.ToLower(neededAuthorities[i])] = true
-		//}
 		token, tokenExists := c.Get("token")
 		if tokenExists {
-			jwtClaims, _ := util.ParseToken(token.(string))
+			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
+			if jwtClaimsError != nil {
+				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				c.Abort()
+				return
+			}
 			username := jwtClaims.Username
 			user := &model.User{}
 			database.DBConn.Debug().Preload("Roles").First(user, &model.User{Username: username})
-			hasAuthoritySet := make(map[string]bool)
+			c.Set("user", user)
+
+			hasRoleSet := make(map[string]bool)
 			roles := user.Roles
 			for i := range roles {
 				fmt.Println(roles[i].RoleName)
-				hasAuthoritySet[strings.ToLower(roles[i].RoleName)] = true
+				hasRoleSet[strings.ToLower(roles[i].RoleName)] = true
 			}
-			for i := range neededAuthorities {
-				_, hasOneNeededAuthority := hasAuthoritySet[strings.ToLower(neededAuthorities[i])]
-				if !hasOneNeededAuthority {
-					apiV1Util.ErrorMessageStatus(c, "User not authorized as "+neededAuthorities[i], http.StatusForbidden)
+			for i := range neededRoles {
+				_, hasOneNeededRole := hasRoleSet[strings.ToLower(neededRoles[i])]
+				if !hasOneNeededRole {
+					apiV1Util.ErrorMessageStatus(c, "User not authorized as "+neededRoles[i], http.StatusForbidden)
 					c.Abort()
+					return
 				}
 			}
 			c.Next()
 		} else {
-			apiV1Util.ErrorMessageStatus(c, "Token not exists.", http.StatusBadRequest)
+			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
 			c.Abort()
+			return
+		}
+	}
+}
+
+func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token, tokenExists := c.Get("token")
+		if tokenExists {
+			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
+			if jwtClaimsError != nil {
+				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				c.Abort()
+				return
+			}
+			username := jwtClaims.Username
+			user := &model.User{}
+			database.DBConn.Debug().Preload("Roles").First(user, &model.User{Username: username})
+			c.Set("user", user)
+
+			hasRoleSet := make(map[string]bool)
+			roles := user.Roles
+			for i := range roles {
+				fmt.Println(roles[i].RoleName)
+				hasRoleSet[strings.ToLower(roles[i].RoleName)] = true
+			}
+			for i := range neededRoles {
+				_, hasOneNeededRole := hasRoleSet[strings.ToLower(neededRoles[i])]
+				if hasOneNeededRole {
+					apiV1Util.ErrorMessageStatus(c, "User not authorized as "+neededRoles[i], http.StatusForbidden)
+					c.Next()
+				}
+			}
+			c.Abort()
+			return
+		} else {
+			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
+			c.Abort()
+			return
+		}
+	}
+}
+
+func CurrentUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token, tokenExists := c.Get("token")
+		if tokenExists {
+			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
+			if jwtClaimsError != nil {
+				apiV1Util.ErrorMessageStatus(c, fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error()), http.StatusBadRequest)
+				c.Abort()
+				return
+			}
+			username := jwtClaims.Username
+			user := &model.User{}
+			database.DBConn.First(user, &model.User{Username: username})
+			c.Set("user", user)
+			c.Next()
+		} else {
+			apiV1Util.ErrorMessageStatus(c, "Token extracting failed, maybe you should use token middleware first.", http.StatusBadRequest)
+			c.Abort()
+			return
 		}
 	}
 }

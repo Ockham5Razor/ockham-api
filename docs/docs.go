@@ -176,6 +176,61 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/v1/users/me/wallet": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get wallet info",
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Get wallet info",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/me/wallet:recharge": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Register to create a user",
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Recharge",
+                "parameters": [
+                    {
+                        "description": "Recharge form",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.RechargeForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -201,6 +256,14 @@ var doc = `{
                 },
                 "rechargeAmount": {
                     "type": "number"
+                }
+            }
+        },
+        "v1.RechargeForm": {
+            "type": "object",
+            "properties": {
+                "rechargeCode": {
+                    "type": "string"
                 }
             }
         },

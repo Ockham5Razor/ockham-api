@@ -26,7 +26,7 @@ func CreateSession(c *gin.Context) {
 	loginJsonForm := &LoginJsonForm{}
 	util.GetJsonForm(c, loginJsonForm)
 	user := &model.User{}
-	database.GetByField(&model.User{Username: loginJsonForm.Username}, user, []string{})
+	database.GetByField(&model.User{Username: loginJsonForm.Username}, user, nil)
 	pass := util.CheckEncrypt(user.Password, loginJsonForm.Password)
 	if pass {
 		if user.EmailVerified {
@@ -59,7 +59,7 @@ func RenewSession(c *gin.Context) {
 	renewSessionForm := &RenewSessionForm{}
 	util.GetJsonForm(c, renewSessionForm)
 	session := &model.Session{}
-	database.GetByField(&model.Session{SessionKey: renewSessionForm.RenewalKey}, session, []string{})
+	database.GetByField(&model.Session{SessionKey: renewSessionForm.RenewalKey}, session, nil)
 	if time.Now().Before(session.ExpiredAt) {
 		if session.RenewalStock > 0 || session.RenewalStock == -1 {
 			body, _ := s_util.GenToken(session.User.Username, session.SessionKey)

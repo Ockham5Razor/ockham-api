@@ -20,9 +20,14 @@ func ApiV1(r *gin.Engine) {
 			v1GroupRechargeCode.POST(
 				"/none/batch-generations",
 				middleware.Token(),
-				middleware.HasAllAuthorities("admin"),
+				middleware.HasAllRoles("admin"),
 				GenerateRechargeCodesInBatches,
 			)
+		}
+		v1GroupWallet := v1Group.Group("/")
+		{
+			v1GroupWallet.GET("/users/me/wallet", middleware.Token(), middleware.HasAnyRole("user"), GetWalletInfo)
+			v1GroupWallet.PUT("/users/me/wallet:recharge", middleware.Token(), middleware.HasAnyRole("user"), RechargeWallet)
 		}
 	}
 }

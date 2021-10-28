@@ -16,6 +16,11 @@ definitions:
       rechargeAmount:
         type: number
     type: object
+  v1.RechargeForm:
+    properties:
+      rechargeCode:
+        type: string
+    type: object
   v1.RegisterJsonForm:
     properties:
       email:
@@ -142,6 +147,39 @@ paths:
       summary: Generate Recharge Codes in Batches
       tags:
       - recharge_code
+  /v1/users/me/wallet:
+    get:
+      description: Get wallet info
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Get wallet info
+      tags:
+      - wallet
+  /v1/users/me/wallet:recharge:
+    put:
+      description: Register to create a user
+      parameters:
+      - description: Recharge form
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RechargeForm'
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Recharge
+      tags:
+      - wallet
 securityDefinitions:
   Bearer:
     in: header

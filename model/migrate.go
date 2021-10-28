@@ -29,14 +29,16 @@ func Migrate(db *gorm.DB) {
 }
 
 func InitData(db *gorm.DB) {
-	initialRole := &Role{RoleName: "admin"}
-	db.FirstOrCreate(initialRole, &Role{RoleName: "admin"})
+	initialRole0 := &Role{RoleName: "admin"}
+	initialRole1 := &Role{RoleName: "user"}
+	db.FirstOrCreate(initialRole0, Role{RoleName: "admin"})
+	db.FirstOrCreate(initialRole1, Role{RoleName: "user"})
 	initialUser := &User{
 		Username:      "admin",
 		Password:      util.Encrypt("admin"),
 		Email:         "dave.smith@admin.com",
 		EmailVerified: true,
-		Roles:         []Role{*initialRole},
+		Roles:         []Role{*initialRole0},
 	}
-	db.FirstOrCreate(initialUser, &User{Username: "admin"})
+	db.FirstOrCreate(initialUser, User{Username: "admin"})
 }

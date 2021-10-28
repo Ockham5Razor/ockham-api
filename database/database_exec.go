@@ -67,8 +67,10 @@ func Updates(c *gin.Context, whereFields interface{}, saveFields interface{}, mo
 
 func GetByField(matchValue interface{}, valueContainer interface{}, joins []string) {
 	var dbc = DBConn
-	for i := 0; i < len(joins); i++ {
-		dbc = dbc.Joins(joins[i])
+	if joins != nil {
+		for i := 0; i < len(joins); i++ {
+			dbc = dbc.Joins(joins[i])
+		}
 	}
 	dbc = dbc.Where(matchValue)
 	if dbc.Error != nil {
