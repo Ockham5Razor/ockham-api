@@ -258,6 +258,49 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create service plan",
+                "tags": [
+                    "market"
+                ],
+                "summary": "Create service plan",
+                "parameters": [
+                    {
+                        "description": "Create service plan form",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ServicePlanForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
             }
         },
         "/v1/users/me/wallet": {
@@ -437,6 +480,39 @@ var doc = `{
             "properties": {
                 "renewalKey": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.ServicePlanForm": {
+            "type": "object",
+            "properties": {
+                "cyclicalIntervalDays": {
+                    "description": "循环周期",
+                    "type": "integer"
+                },
+                "cyclicalTrafficBytes": {
+                    "description": "每次循环的流量大小",
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "inheritSurplusTraffic": {
+                    "description": "循环中继承结余流量",
+                    "type": "boolean"
+                },
+                "price": {
+                    "description": "价格",
+                    "type": "number"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "totalCycleTimes": {
+                    "description": "总循环次数",
+                    "type": "integer"
                 }
             }
         },
