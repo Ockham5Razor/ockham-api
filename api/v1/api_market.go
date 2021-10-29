@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"gol-c/api/v1/middleware"
 	"gol-c/api/v1/util"
 	"gol-c/database"
 	"gol-c/model"
@@ -23,21 +24,23 @@ type ServicePlanForm struct {
 	Title                 string  // 标题
 	Description           string  // 描述
 	CyclicalTrafficBytes  int64   // 每次循环的流量大小
-	CyclicalIntervalDays  int16   // 循环周期
+	CyclicalLastingDays   int16   // 循环周期
 	InheritSurplusTraffic bool    // 循环中继承结余流量
 	TotalCycleTimes       int16   // 总循环次数
-	Price                 float32 // 价格
+	PriceForEachCycle     float32 // 每次循环价格
+	Enabled               bool    // 启用中
 }
 
-func (servicePlanForm *ServicePlanForm) toModel() *model.ServicePlan {
+func (_this *ServicePlanForm) toModel() *model.ServicePlan {
 	return &model.ServicePlan{
-		Title:                 servicePlanForm.Title,
-		Description:           servicePlanForm.Description,
-		CyclicalTrafficBytes:  servicePlanForm.CyclicalTrafficBytes,
-		CyclicalIntervalDays:  servicePlanForm.CyclicalIntervalDays,
-		InheritSurplusTraffic: servicePlanForm.InheritSurplusTraffic,
-		TotalCycleTimes:       servicePlanForm.TotalCycleTimes,
-		Price:                 servicePlanForm.Price,
+		Title:                 _this.Title,
+		Description:           _this.Description,
+		CyclicalTrafficBytes:  _this.CyclicalTrafficBytes,
+		CyclicalLastingDays:   _this.CyclicalLastingDays,
+		InheritSurplusTraffic: _this.InheritSurplusTraffic,
+		TotalCycleTimes:       _this.TotalCycleTimes,
+		PriceForEachCycle:     _this.PriceForEachCycle,
+		Enabled:               _this.Enabled,
 	}
 }
 
@@ -58,4 +61,34 @@ func CreateServicePlan(c *gin.Context) {
 		return
 	}
 	util.SuccessPack(c).WithMessage("Service plan created!").Responds()
+}
+
+type SubscribeServicePlanForm struct {
+	ServicePlanId       uint
+	ConsolidateBillings bool // 合并账单一次结清
+}
+
+// SubscribeServicePlan
+// @Summary Subscribe service plan
+// @Description Subscribe service plan
+// @Tags market
+// @Security Bearer
+// @Param param body SubscribeServicePlanForm true "Subscribe service plan form"
+// @Success 200 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Router /v1/users/me/service-plan-subscriptions [PUT]
+func SubscribeServicePlan(c *gin.Context) {
+	currentUser := middleware.GetCurrentUser(c)
+	subscribeServicePlanForm := &SubscribeServicePlanForm{}
+	util.GetJsonForm(c, subscribeServicePlanForm)
+
+	servicePlan := &model.ServicePlan{}
+	database.Get(subscribeServicePlanForm.ServicePlanId, servicePlan)
+
+	servicePlanSubscription := servicePlan.Subscribe(currentUser)
+	err := database.Create(c, servicePlanSubscription, "ServicePlanSubscription", util.ErrorMessageStatus)
+	if err != nil {
+		return
+	}
+	util.SuccessPack(c).WithMessage("Successfully subscribed service plan!")
 }

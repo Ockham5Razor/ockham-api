@@ -93,7 +93,7 @@ info:
   title: Gol-C API
   version: "1.0"
 paths:
-  /v1/auth/email-validations/any:validate:
+  /v1/auth/email-validations/any/validating:
     put:
       description: Validate a user's email
       parameters:
@@ -145,7 +145,7 @@ paths:
       summary: Login
       tags:
       - auth
-  /v1/auth/sessions/any:renew:
+  /v1/auth/sessions/any/renewing:
     put:
       description: Keep login status as a user.
       parameters:
@@ -267,6 +267,27 @@ paths:
       summary: Create service plan
       tags:
       - market
+  /v1/users/me/service-plan-subscriptions:
+    put:
+      description: Subscribe service plan
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Subscribe service plan
+      tags:
+      - market
   /v1/users/me/wallet:
     get:
       description: Get wallet info
@@ -284,24 +305,7 @@ paths:
       summary: Get wallet info
       tags:
       - wallet
-  /v1/users/me/wallet/records:
-    get:
-      description: Get wallet records
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/util.Pack'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/util.Pack'
-      security:
-      - Bearer: []
-      summary: Get wallet records
-      tags:
-      - wallet
-  /v1/users/me/wallet:recharge:
+  /v1/users/me/wallet/recharging:
     put:
       description: Register to create a user
       parameters:
@@ -327,6 +331,23 @@ paths:
       security:
       - Bearer: []
       summary: Recharge
+      tags:
+      - wallet
+  /v1/users/me/wallet/records:
+    get:
+      description: Get wallet records
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Get wallet records
       tags:
       - wallet
 securityDefinitions:

@@ -32,7 +32,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/auth/email-validations/any:validate": {
+        "/v1/auth/email-validations/any/validating": {
             "put": {
                 "description": "Validate a user's email",
                 "tags": [
@@ -112,7 +112,7 @@ var doc = `{
                 }
             }
         },
-        "/v1/auth/sessions/any:renew": {
+        "/v1/auth/sessions/any/renewing": {
             "put": {
                 "description": "Keep login status as a user.",
                 "tags": [
@@ -303,6 +303,40 @@ var doc = `{
                 }
             }
         },
+        "/v1/users/me/service-plan-subscriptions": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Subscribe service plan",
+                "tags": [
+                    "market"
+                ],
+                "summary": "Subscribe service plan",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/wallet": {
             "get": {
                 "security": [
@@ -331,35 +365,7 @@ var doc = `{
                 }
             }
         },
-        "/v1/users/me/wallet/records": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get wallet records",
-                "tags": [
-                    "wallet"
-                ],
-                "summary": "Get wallet records",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/util.Pack"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/util.Pack"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/users/me/wallet:recharge": {
+        "/v1/users/me/wallet/recharging": {
             "put": {
                 "security": [
                     {
@@ -397,6 +403,34 @@ var doc = `{
                     },
                     "410": {
                         "description": "Gone",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/me/wallet/records": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get wallet records",
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Get wallet records",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/util.Pack"
                         }

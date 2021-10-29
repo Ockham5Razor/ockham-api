@@ -56,7 +56,7 @@ type RenewSessionForm struct {
 // @Success 201 {object} util.Pack
 // @Failure 403,409,500 {object} util.Pack
 // @Param param body RenewSessionForm true "session renewal form"
-// @Router /v1/auth/sessions/any:renew [PUT]
+// @Router /v1/auth/sessions/any/renewing [PUT]
 func RenewSession(c *gin.Context) {
 	renewSessionForm := &RenewSessionForm{}
 	util.GetJsonForm(c, renewSessionForm)

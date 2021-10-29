@@ -65,7 +65,7 @@ type RechargeForm struct {
 // @Success 201 {object} util.Pack
 // @Failure 403,410 {object} util.Pack
 // @Param param body RechargeForm true "Recharge form"
-// @Router /v1/users/me/wallet:recharge [PUT]
+// @Router /v1/users/me/wallet/recharging [PUT]
 func RechargeWallet(c *gin.Context) {
 	user, userExists := c.Get("user")
 	if userExists {

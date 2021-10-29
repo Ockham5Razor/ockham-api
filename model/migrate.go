@@ -13,11 +13,12 @@ func Migrate(db *gorm.DB) {
 		&UserWalletRecord{},
 		&ServicePack{},
 		&ServicePlan{},
-		&ServicePlanUtilization{},
+		&ServicePlanSubscription{},
 		&Session{},
 		&EmailValidation{},
-		&Order{},
 		&RechargeCode{},
+		&Billing{},
+		&SplitBilling{},
 	}
 
 	for i := 0; i < len(models); i++ {
@@ -38,7 +39,7 @@ func InitData(db *gorm.DB) {
 		Password:      util.Encrypt("admin"),
 		Email:         "dave.smith@admin.com",
 		EmailVerified: true,
-		Roles:         []Role{*initialRole0},
+		Roles:         []Role{*initialRole0, *initialRole1},
 	}
 	db.FirstOrCreate(initialUser, User{Username: "admin"})
 }

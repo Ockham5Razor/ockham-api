@@ -109,3 +109,15 @@ func CurrentUser() gin.HandlerFunc {
 		}
 	}
 }
+
+func GetCurrentUser(c *gin.Context) *model.User {
+	userIntf, userExists := c.Get("user")
+	if userExists {
+		user := userIntf.(model.User)
+		return &user
+	} else {
+		apiV1Util.ErrorPack(c).WithMessage("Fatal: extracting current user failed.").WithHttpResponseCode(http.StatusInternalServerError).Responds()
+		c.Abort()
+		return nil
+	}
+}
