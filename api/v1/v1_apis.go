@@ -34,6 +34,7 @@ func ApiV1(r *gin.Engine) {
 		{
 			v1GroupServicePlans.GET("/service-plans", ListServicePlans)
 			v1GroupServicePlans.POST("/service-plans", middleware.Token(), middleware.HasAnyRole("admin"), CreateServicePlan)
+			v1GroupServicePlans.GET("/users/me/service-plan-subscriptions", middleware.Token(), middleware.HasAnyRole("user"), ListMyServicePlanSubscriptions)
 			v1GroupServicePlans.POST("/users/me/service-plan-subscriptions", middleware.Token(), middleware.HasAnyRole("user"), SubscribeServicePlan)
 		}
 	}

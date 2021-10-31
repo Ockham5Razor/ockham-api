@@ -11,8 +11,7 @@ definitions:
     properties:
       Meta:
         $ref: '#/definitions/util.Meta'
-      data:
-        type: object
+      data: {}
     type: object
   v1.LoginJsonForm:
     properties:
@@ -51,7 +50,7 @@ definitions:
     type: object
   v1.ServicePlanForm:
     properties:
-      cyclicalIntervalDays:
+      cyclicalLastingDays:
         description: 循环周期
         type: integer
       cyclicalTrafficBytes:
@@ -60,17 +59,28 @@ definitions:
       description:
         description: 描述
         type: string
+      enabled:
+        description: 启用中
+        type: boolean
       inheritSurplusTraffic:
         description: 循环中继承结余流量
         type: boolean
-      price:
-        description: 价格
+      priceForEachCycle:
+        description: 每次循环价格
         type: number
       title:
         description: 标题
         type: string
       totalCycleTimes:
         description: 总循环次数
+        type: integer
+    type: object
+  v1.SubscribeServicePlanForm:
+    properties:
+      consolidateBillings:
+        description: 合并账单一次结清
+        type: boolean
+      servicePlanId:
         type: integer
     type: object
   v1.ValidateEmailJsonForm:
@@ -268,8 +278,35 @@ paths:
       tags:
       - market
   /v1/users/me/service-plan-subscriptions:
-    put:
+    get:
+      description: List service plan subscriptions
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: List service plan subscriptions
+      tags:
+      - market
+    post:
       description: Subscribe service plan
+      parameters:
+      - description: Subscribe service plan form
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.SubscribeServicePlanForm'
       responses:
         "200":
           description: OK

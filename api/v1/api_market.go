@@ -63,6 +63,23 @@ func CreateServicePlan(c *gin.Context) {
 	util.SuccessPack(c).WithMessage("Service plan created!").Responds()
 }
 
+// ListMyServicePlanSubscriptions
+// @Summary List service plan subscriptions
+// @Description List service plan subscriptions
+// @Tags market
+// @Security Bearer
+// @Success 200 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Router /v1/users/me/service-plan-subscriptions [GET]
+func ListMyServicePlanSubscriptions(c *gin.Context) {
+	currentUser := middleware.GetCurrentUser(c)
+
+	subscriptions := &[]model.ServicePlanSubscription{}
+	database.GetByField(model.ServicePlanSubscription{UserID: currentUser.ID}, subscriptions, nil)
+
+	util.SuccessPack(c).WithData(subscriptions).Responds()
+}
+
 type SubscribeServicePlanForm struct {
 	ServicePlanId       uint
 	ConsolidateBillings bool // 合并账单一次结清
@@ -76,7 +93,7 @@ type SubscribeServicePlanForm struct {
 // @Param param body SubscribeServicePlanForm true "Subscribe service plan form"
 // @Success 200 {object} util.Pack
 // @Failure 409,500 {object} util.Pack
-// @Router /v1/users/me/service-plan-subscriptions [PUT]
+// @Router /v1/users/me/service-plan-subscriptions [POST]
 func SubscribeServicePlan(c *gin.Context) {
 	currentUser := middleware.GetCurrentUser(c)
 	subscribeServicePlanForm := &SubscribeServicePlanForm{}
@@ -90,5 +107,5 @@ func SubscribeServicePlan(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	util.SuccessPack(c).WithMessage("Successfully subscribed service plan!")
+	util.SuccessPack(c).WithMessage("Successfully subscribed service plan!").Responds()
 }

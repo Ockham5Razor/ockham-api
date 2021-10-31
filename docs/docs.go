@@ -304,7 +304,39 @@ var doc = `{
             }
         },
         "/v1/users/me/service-plan-subscriptions": {
-            "put": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "List service plan subscriptions",
+                "tags": [
+                    "market"
+                ],
+                "summary": "List service plan subscriptions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            },
+            "post": {
                 "security": [
                     {
                         "Bearer": []
@@ -315,6 +347,17 @@ var doc = `{
                     "market"
                 ],
                 "summary": "Subscribe service plan",
+                "parameters": [
+                    {
+                        "description": "Subscribe service plan form",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.SubscribeServicePlanForm"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -457,9 +500,7 @@ var doc = `{
                 "Meta": {
                     "$ref": "#/definitions/util.Meta"
                 },
-                "data": {
-                    "type": "object"
-                }
+                "data": {}
             }
         },
         "v1.LoginJsonForm": {
@@ -520,7 +561,7 @@ var doc = `{
         "v1.ServicePlanForm": {
             "type": "object",
             "properties": {
-                "cyclicalIntervalDays": {
+                "cyclicalLastingDays": {
                     "description": "循环周期",
                     "type": "integer"
                 },
@@ -532,12 +573,16 @@ var doc = `{
                     "description": "描述",
                     "type": "string"
                 },
+                "enabled": {
+                    "description": "启用中",
+                    "type": "boolean"
+                },
                 "inheritSurplusTraffic": {
                     "description": "循环中继承结余流量",
                     "type": "boolean"
                 },
-                "price": {
-                    "description": "价格",
+                "priceForEachCycle": {
+                    "description": "每次循环价格",
                     "type": "number"
                 },
                 "title": {
@@ -546,6 +591,18 @@ var doc = `{
                 },
                 "totalCycleTimes": {
                     "description": "总循环次数",
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.SubscribeServicePlanForm": {
+            "type": "object",
+            "properties": {
+                "consolidateBillings": {
+                    "description": "合并账单一次结清",
+                    "type": "boolean"
+                },
+                "servicePlanId": {
                     "type": "integer"
                 }
             }
@@ -622,5 +679,5 @@ func (s *s) ReadDoc() string {
 }
 
 func init() {
-	swag.Register(swag.Name, &s{})
+	swag.Register("swagger", &s{})
 }
