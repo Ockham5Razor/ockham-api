@@ -277,6 +277,23 @@ paths:
       summary: Create service plan
       tags:
       - market
+  /v1/service-plans/{service_plan_id}:
+    get:
+      description: Get service plan
+      parameters:
+      - description: service plan id
+        in: path
+        name: service_plan_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: Get service plan
+      tags:
+      - market
   /v1/users/me/service-plan-subscriptions:
     get:
       description: List service plan subscriptions

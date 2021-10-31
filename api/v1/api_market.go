@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gol-c/api/v1/middleware"
 	"gol-c/api/v1/util"
@@ -66,6 +65,25 @@ func CreateServicePlan(c *gin.Context) {
 	util.SuccessPack(c).WithMessage("Service plan created!").Responds()
 }
 
+// GetServicePlans
+// @Summary Get service plan
+// @Description Get service plan
+// @Tags market
+// @Param service_plan_id path int true "service plan id"
+// @Success 200 {object} util.Pack
+// @Router /v1/service-plans/{service_plan_id} [GET]
+func GetServicePlans(c *gin.Context) {
+	idStr := c.Param("service_plan_subscription_id")
+	idU64, _ := strconv.ParseUint(idStr, 10, 32)
+	servicePlan := &model.ServicePlan{}
+	ctx := database.DBConn.Find(servicePlan, idU64)
+	if ctx.RowsAffected == 0 {
+		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Service plan not found!").Responds()
+	} else {
+		util.SuccessPack(c).WithData(servicePlan).Responds()
+	}
+}
+
 // ListMyServicePlanSubscriptions
 // @Summary List service plan subscriptions
 // @Description List service plan subscriptions
@@ -128,7 +146,6 @@ func GetMyServicePlanSubscriptions(c *gin.Context) {
 	idU64, _ := strconv.ParseUint(idStr, 10, 32)
 	subscription := &model.ServicePlanSubscription{}
 	ctx := database.DBConn.Where(model.ServicePlanSubscription{UserID: currentUser.ID}).Find(subscription, idU64)
-	fmt.Println(subscription)
 	if ctx.RowsAffected == 0 {
 		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Service plan subscription not found!").Responds()
 	} else {

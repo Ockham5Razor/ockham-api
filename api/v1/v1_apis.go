@@ -32,6 +32,7 @@ func ApiV1(r *gin.Engine) {
 		}
 		v1GroupServicePlans := v1Group.Group("/")
 		{
+			v1GroupServicePlans.GET("/service-plans/:service_plan_id", GetServicePlans)
 			v1GroupServicePlans.GET("/service-plans", ListServicePlans)
 			v1GroupServicePlans.POST("/service-plans", middleware.Token(), middleware.HasAnyRole("admin"), CreateServicePlan)
 			v1GroupServicePlans.GET("/users/me/service-plan-subscriptions/:service_plan_subscription_id", middleware.Token(), middleware.HasAnyRole("user"), GetMyServicePlanSubscriptions)

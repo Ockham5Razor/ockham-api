@@ -288,6 +288,32 @@
                 }
             }
         },
+        "/v1/service-plans/{service_plan_id}": {
+            "get": {
+                "description": "Get service plan",
+                "tags": [
+                    "market"
+                ],
+                "summary": "Get service plan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "service plan id",
+                        "name": "service_plan_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/service-plan-subscriptions": {
             "get": {
                 "security": [
