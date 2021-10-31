@@ -325,6 +325,33 @@ paths:
       summary: Subscribe service plan
       tags:
       - market
+  /v1/users/me/service-plan-subscriptions/{service_plan_subscription_id}:
+    get:
+      description: Get service plan subscriptions
+      parameters:
+      - description: service plan subscriptions id
+        in: path
+        name: service_plan_subscription_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Get service plan subscriptions
+      tags:
+      - market
   /v1/users/me/wallet:
     get:
       description: Get wallet info

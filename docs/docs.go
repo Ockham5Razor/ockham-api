@@ -380,6 +380,49 @@ var doc = `{
                 }
             }
         },
+        "/v1/users/me/service-plan-subscriptions/{service_plan_subscription_id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get service plan subscriptions",
+                "tags": [
+                    "market"
+                ],
+                "summary": "Get service plan subscriptions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "service plan subscriptions id",
+                        "name": "service_plan_subscription_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/wallet": {
             "get": {
                 "security": [

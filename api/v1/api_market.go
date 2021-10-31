@@ -1,11 +1,14 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gol-c/api/v1/middleware"
 	"gol-c/api/v1/util"
 	"gol-c/database"
 	"gol-c/model"
+	"net/http"
+	"strconv"
 )
 
 // ListServicePlans
@@ -108,4 +111,27 @@ func SubscribeServicePlan(c *gin.Context) {
 		return
 	}
 	util.SuccessPack(c).WithMessage("Successfully subscribed service plan!").Responds()
+}
+
+// GetMyServicePlanSubscriptions
+// @Summary Get service plan subscriptions
+// @Description Get service plan subscriptions
+// @Tags market
+// @Security Bearer
+// @Param service_plan_subscription_id path int true "service plan subscriptions id"
+// @Success 200 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Router /v1/users/me/service-plan-subscriptions/{service_plan_subscription_id} [GET]
+func GetMyServicePlanSubscriptions(c *gin.Context) {
+	currentUser := middleware.GetCurrentUser(c)
+	idStr := c.Param("service_plan_subscription_id")
+	idU64, _ := strconv.ParseUint(idStr, 10, 32)
+	subscription := &model.ServicePlanSubscription{}
+	ctx := database.DBConn.Where(model.ServicePlanSubscription{UserID: currentUser.ID}).Find(subscription, idU64)
+	fmt.Println(subscription)
+	if ctx.RowsAffected == 0 {
+		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Service plan subscription not found!").Responds()
+	} else {
+		util.SuccessPack(c).WithData(subscription).Responds()
+	}
 }

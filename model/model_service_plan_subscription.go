@@ -13,6 +13,6 @@ type ServicePlanSubscription struct {
 	TotalCycleTimes       int16   // 总循环次数，-1 为不限次数，如果为 -1 则不允许合并账单支付
 	FeeForEachCycle       float32 // 每次循环费用
 	UserID                uint
-	User                  User
+	User                  User `json:"-"`
 	Enabled               bool // 启用
 }
