@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gol-c/api/v1/middleware"
 	"gol-c/api/v1/util"
@@ -8,6 +9,7 @@ import (
 	"gol-c/model"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // ListServicePlans
@@ -123,8 +125,23 @@ func SubscribeServicePlan(c *gin.Context) {
 	servicePlan := &model.ServicePlan{}
 	database.Get(subscribeServicePlanForm.ServicePlanId, servicePlan)
 
+	billing := &model.Billing{
+		Title:         fmt.Sprintf("订阅服务计划"),
+		Description:   servicePlan.Description,
+		BillingTotal:  float32(servicePlan.TotalCycleTimes) * servicePlan.PriceForEachCycle,
+		BillingDate:   time.Now(),
+		DueDate:       time.Now().AddDate(0, 0, 1),
+		Paid:          false,
+		UserID:        currentUser.ID,
+		SplitPayment:  false,
+		SplitBillings: nil,
+	}
+	err := database.Create(c, billing, "billing", util.ErrorMessageStatus)
+	if err != nil {
+		return
+	}
 	servicePlanSubscription := servicePlan.Subscribe(currentUser)
-	err := database.Create(c, servicePlanSubscription, "ServicePlanSubscription", util.ErrorMessageStatus)
+	err = database.Create(c, servicePlanSubscription, "ServicePlanSubscription", util.ErrorMessageStatus)
 	if err != nil {
 		return
 	}
