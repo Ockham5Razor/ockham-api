@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"gol-c/config"
-	"gol-c/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -11,7 +10,7 @@ import (
 
 var DBConn *gorm.DB
 
-func Init() {
+func Init() *gorm.DB {
 	// 读取配置
 	conf := config.GetConfig()
 	dbConf := conf.Db
@@ -30,8 +29,5 @@ func Init() {
 		panic("Failed to connect database.")
 	}
 
-	// 移植数据库
-	model.Migrate(DBConn)
-	// 初始化数据
-	model.InitData(DBConn)
+	return DBConn
 }

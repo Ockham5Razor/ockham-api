@@ -7,6 +7,7 @@ import (
 	v1 "gol-c/api/v1"
 	"gol-c/database"
 	_ "gol-c/docs"
+	"gol-c/model"
 )
 
 // @title Gol-C API
@@ -28,7 +29,12 @@ import (
 // @BasePath /api
 func main() {
 
-	database.Init()
+	dbConn := database.Init()
+
+	// 移植数据库
+	model.Migrate(dbConn)
+	// 初始化数据
+	model.InitData(dbConn)
 
 	// 创建 HTTP 路由
 	r := gin.Default()
