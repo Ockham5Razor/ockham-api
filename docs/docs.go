@@ -15,8 +15,8 @@ var doc = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
-        "description": "{{escape .Description}}",
-        "title": "{{.Title}}",
+        "description": "{{escape .SubscriptionDescription}}",
+        "title": "{{.SubscriptionTitle}}",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
@@ -368,14 +368,14 @@ var doc = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Subscribe service plan",
+                "description": "Subscribes service plan",
                 "tags": [
                     "market"
                 ],
-                "summary": "Subscribe service plan",
+                "summary": "Subscribes service plan",
                 "parameters": [
                     {
-                        "description": "Subscribe service plan form",
+                        "description": "Subscribes service plan form",
                         "name": "param",
                         "in": "body",
                         "required": true,

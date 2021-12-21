@@ -13,7 +13,7 @@ import (
 
 // GetWalletInfo
 // @Summary Get wallet info
-// @Description Get wallet info
+// @SubscriptionDescription Get wallet info
 // @Tags wallet
 // @Security Bearer
 // @Success 200 {object} util.Pack
@@ -34,7 +34,7 @@ func GetWalletInfo(c *gin.Context) {
 
 // GetRecordsOfWallet
 // @Summary Get wallet records
-// @Description Get wallet records
+// @SubscriptionDescription Get wallet records
 // @Tags wallet
 // @Security Bearer
 // @Success 200 {object} util.Pack
@@ -59,7 +59,7 @@ type RechargeForm struct {
 
 // RechargeWallet
 // @Summary Recharge
-// @Description Register to create a user
+// @SubscriptionDescription Register to create a user
 // @Tags wallet
 // @security Bearer
 // @Success 201 {object} util.Pack
@@ -75,7 +75,7 @@ func RechargeWallet(c *gin.Context) {
 
 		// 获取前端传来的充值码
 		rechargeForm := &RechargeForm{}
-		util.GetJsonForm(c, rechargeForm)
+		util.FillJsonForm(c, rechargeForm)
 
 		err := recharge(rechargeForm.RechargeCode, userID)
 		if err == nil {

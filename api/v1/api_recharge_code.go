@@ -16,7 +16,7 @@ type RechargeCodeGeneratingJsonForm struct {
 
 // GenerateRechargeCodesInBatches
 // @Summary Generate Recharge Codes in Batches
-// @Description Generate Recharge Codes in Batches
+// @SubscriptionDescription Generate Recharge Codes in Batches
 // @Tags recharge_code
 // @Security Bearer
 // @Success 201 {object} util.Pack
@@ -25,7 +25,7 @@ type RechargeCodeGeneratingJsonForm struct {
 // @Router /v1/recharge-codes/none/batch-generations [POST]
 func GenerateRechargeCodesInBatches(c *gin.Context) {
 	genForm := &RechargeCodeGeneratingJsonForm{}
-	util.GetJsonForm(c, genForm)
+	util.FillJsonForm(c, genForm)
 	var rechargeCodes []*model.RechargeCode
 	for i := 0; i < genForm.BatchCount; i++ {
 		rechargeCodes = append(rechargeCodes, model.GenRechargeCode(genForm.PackageName, genForm.RechargeAmount))

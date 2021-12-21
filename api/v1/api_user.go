@@ -16,7 +16,7 @@ type RegisterJsonForm struct {
 
 // CreateUser
 // @Summary Register
-// @Description Register to create a user
+// @SubscriptionDescription Register to create a user
 // @Tags auth
 // @Success 201 {object} util.Pack
 // @Failure 409,500 {object} util.Pack
@@ -24,7 +24,7 @@ type RegisterJsonForm struct {
 // @Router /v1/auth/users [POST]
 func CreateUser(c *gin.Context) {
 	registerJsonForm := &RegisterJsonForm{}
-	util.GetJsonForm(c, registerJsonForm)
+	util.FillJsonForm(c, registerJsonForm)
 
 	user := &model.User{
 		Username:      registerJsonForm.Username,

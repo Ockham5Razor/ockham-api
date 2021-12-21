@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func GetJsonForm(c *gin.Context, form interface{}) {
+func FillJsonForm(c *gin.Context, form interface{}) {
 	err := c.BindJSON(form)
 
 	if err != nil {

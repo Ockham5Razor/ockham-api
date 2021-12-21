@@ -16,7 +16,7 @@ type ValidateEmailJsonForm struct {
 
 // ValidateEmail
 // @Summary ValidateEmail
-// @Description Validate a user's email
+// @SubscriptionDescription Validate a user's email
 // @Tags auth
 // @Success 200 {object} util.Pack
 // @Failure 410 {object} util.Pack
@@ -24,7 +24,7 @@ type ValidateEmailJsonForm struct {
 // @Router /v1/auth/email-validations/any/validating [PUT]
 func ValidateEmail(c *gin.Context) {
 	validateEmailJsonForm := &ValidateEmailJsonForm{}
-	util.GetJsonForm(c, validateEmailJsonForm)
+	util.FillJsonForm(c, validateEmailJsonForm)
 
 	emailValidation := &model.EmailValidation{}
 	database.GetByField(&model.EmailValidation{ValidationKey: validateEmailJsonForm.ValidatorKey}, &emailValidation, []string{"User"})

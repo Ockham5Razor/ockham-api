@@ -17,7 +17,7 @@ type LoginJsonForm struct {
 
 // CreateSession
 // @Summary Login
-// @Description Login as a user
+// @SubscriptionDescription Login as a user
 // @Tags auth
 // @Success 201 {object} util.Pack
 // @Failure 401,409,500 {object} util.Pack
@@ -25,7 +25,7 @@ type LoginJsonForm struct {
 // @Router /v1/auth/sessions [POST]
 func CreateSession(c *gin.Context) {
 	loginJsonForm := &LoginJsonForm{}
-	util.GetJsonForm(c, loginJsonForm)
+	util.FillJsonForm(c, loginJsonForm)
 	user := &model.User{}
 	database.GetByField(&model.User{Username: loginJsonForm.Username}, user, nil)
 	pass := util.CheckEncrypt(user.Password, loginJsonForm.Password)
@@ -51,7 +51,7 @@ type RenewSessionForm struct {
 
 // RenewSession
 // @Summary Keep login status
-// @Description Keep login status as a user.
+// @SubscriptionDescription Keep login status as a user.
 // @Tags auth
 // @Success 201 {object} util.Pack
 // @Failure 403,409,500 {object} util.Pack
@@ -59,7 +59,7 @@ type RenewSessionForm struct {
 // @Router /v1/auth/sessions/any/renewing [PUT]
 func RenewSession(c *gin.Context) {
 	renewSessionForm := &RenewSessionForm{}
-	util.GetJsonForm(c, renewSessionForm)
+	util.FillJsonForm(c, renewSessionForm)
 	session := &model.Session{}
 	database.GetByField(&model.Session{SessionKey: renewSessionForm.RenewalKey}, session, nil)
 	if time.Now().Before(session.ExpiredAt) {
