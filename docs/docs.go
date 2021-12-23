@@ -15,8 +15,8 @@ var doc = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
-        "description": "{{escape .SubscriptionDescription}}",
-        "title": "{{.SubscriptionTitle}}",
+        "description": "{{escape .Description}}",
+        "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
@@ -34,7 +34,6 @@ var doc = `{
     "paths": {
         "/v1/auth/email-validations/any/validating": {
             "put": {
-                "description": "Validate a user's email",
                 "tags": [
                     "auth"
                 ],
@@ -68,7 +67,6 @@ var doc = `{
         },
         "/v1/auth/sessions": {
             "post": {
-                "description": "Login as a user",
                 "tags": [
                     "auth"
                 ],
@@ -114,7 +112,6 @@ var doc = `{
         },
         "/v1/auth/sessions/any/renewing": {
             "put": {
-                "description": "Keep login status as a user.",
                 "tags": [
                     "auth"
                 ],
@@ -160,7 +157,6 @@ var doc = `{
         },
         "/v1/auth/users": {
             "post": {
-                "description": "Register to create a user",
                 "tags": [
                     "auth"
                 ],
@@ -198,6 +194,106 @@ var doc = `{
                 }
             }
         },
+        "/v1/auth/users/{user_id}/roles": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Grant Role",
+                "parameters": [
+                    {
+                        "description": "GrantRoleForm from",
+                        "name": "param",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.GrantRoleForm"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/users/{user_id}/roles/{role_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Revoke Role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "role id",
+                        "name": "role_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/recharge-codes/none/batch-generations": {
             "post": {
                 "security": [
@@ -205,7 +301,6 @@ var doc = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Generate Recharge Codes in Batches",
                 "tags": [
                     "recharge_code"
                 ],
@@ -456,7 +551,6 @@ var doc = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Get wallet info",
                 "tags": [
                     "wallet"
                 ],
@@ -484,7 +578,6 @@ var doc = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Register to create a user",
                 "tags": [
                     "wallet"
                 ],
@@ -529,7 +622,6 @@ var doc = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Get wallet records",
                 "tags": [
                     "wallet"
                 ],
@@ -570,6 +662,14 @@ var doc = `{
                     "$ref": "#/definitions/util.Meta"
                 },
                 "data": {}
+            }
+        },
+        "v1.GrantRoleForm": {
+            "type": "object",
+            "properties": {
+                "roleID": {
+                    "type": "integer"
+                }
             }
         },
         "v1.LoginJsonForm": {
@@ -630,35 +730,35 @@ var doc = `{
         "v1.ServicePlanForm": {
             "type": "object",
             "properties": {
-                "cyclicalLastingDays": {
-                    "description": "循环周期",
-                    "type": "integer"
-                },
-                "cyclicalTrafficBytes": {
-                    "description": "每次循环的流量大小",
-                    "type": "integer"
-                },
-                "description": {
-                    "description": "描述",
-                    "type": "string"
-                },
-                "enabled": {
-                    "description": "启用中",
-                    "type": "boolean"
-                },
-                "inheritSurplusTraffic": {
+                "eachTermInheritSurplusTraffic": {
                     "description": "循环中继承结余流量",
                     "type": "boolean"
                 },
-                "priceForEachCycle": {
-                    "description": "每次循环价格",
-                    "type": "number"
+                "eachTermTrafficBytes": {
+                    "description": "每次循环的流量大小",
+                    "type": "integer"
                 },
-                "title": {
+                "planDescription": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "planEnabled": {
+                    "description": "启用中",
+                    "type": "boolean"
+                },
+                "planTitle": {
                     "description": "标题",
                     "type": "string"
                 },
-                "totalCycleTimes": {
+                "renewalFee": {
+                    "description": "每次循环价格",
+                    "type": "number"
+                },
+                "termSpacingDays": {
+                    "description": "循环周期",
+                    "type": "integer"
+                },
+                "termTimesTotal": {
                     "description": "总循环次数",
                     "type": "integer"
                 }

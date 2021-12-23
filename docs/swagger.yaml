@@ -13,6 +13,11 @@ definitions:
         $ref: '#/definitions/util.Meta'
       data: {}
     type: object
+  v1.GrantRoleForm:
+    properties:
+      roleID:
+        type: integer
+    type: object
   v1.LoginJsonForm:
     properties:
       password:
@@ -50,28 +55,28 @@ definitions:
     type: object
   v1.ServicePlanForm:
     properties:
-      cyclicalLastingDays:
-        description: 循环周期
-        type: integer
-      cyclicalTrafficBytes:
-        description: 每次循环的流量大小
-        type: integer
-      description:
-        description: 描述
-        type: string
-      enabled:
-        description: 启用中
-        type: boolean
-      inheritSurplusTraffic:
+      eachTermInheritSurplusTraffic:
         description: 循环中继承结余流量
         type: boolean
-      priceForEachCycle:
-        description: 每次循环价格
-        type: number
-      title:
+      eachTermTrafficBytes:
+        description: 每次循环的流量大小
+        type: integer
+      planDescription:
+        description: 描述
+        type: string
+      planEnabled:
+        description: 启用中
+        type: boolean
+      planTitle:
         description: 标题
         type: string
-      totalCycleTimes:
+      renewalFee:
+        description: 每次循环价格
+        type: number
+      termSpacingDays:
+        description: 循环周期
+        type: integer
+      termTimesTotal:
         description: 总循环次数
         type: integer
     type: object
@@ -105,7 +110,6 @@ info:
 paths:
   /v1/auth/email-validations/any/validating:
     put:
-      description: Validate a user's email
       parameters:
       - description: Email validation from
         in: body
@@ -127,7 +131,6 @@ paths:
       - auth
   /v1/auth/sessions:
     post:
-      description: Login as a user
       parameters:
       - description: Login json form
         in: body
@@ -157,7 +160,6 @@ paths:
       - auth
   /v1/auth/sessions/any/renewing:
     put:
-      description: Keep login status as a user.
       parameters:
       - description: session renewal form
         in: body
@@ -187,7 +189,6 @@ paths:
       - auth
   /v1/auth/users:
     post:
-      description: Register to create a user
       parameters:
       - description: CreateUser from
         in: body
@@ -211,9 +212,71 @@ paths:
       summary: Register
       tags:
       - auth
+  /v1/auth/users/{user_id}/roles:
+    post:
+      parameters:
+      - description: GrantRoleForm from
+        in: body
+        name: param
+        required: true
+        schema:
+          $ref: '#/definitions/v1.GrantRoleForm'
+      - description: user id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Grant Role
+      tags:
+      - auth
+  /v1/auth/users/{user_id}/roles/{role_id}:
+    delete:
+      parameters:
+      - description: user id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: role id
+        in: path
+        name: role_id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Revoke Role
+      tags:
+      - auth
   /v1/recharge-codes/none/batch-generations:
     post:
-      description: Generate Recharge Codes in Batches
       parameters:
       - description: Generating recharge code from
         in: body
@@ -316,9 +379,9 @@ paths:
       tags:
       - market
     post:
-      description: Subscribe service plan
+      description: Subscribes service plan
       parameters:
-      - description: Subscribe service plan form
+      - description: Subscribes service plan form
         in: body
         name: param
         required: true
@@ -339,7 +402,7 @@ paths:
             $ref: '#/definitions/util.Pack'
       security:
       - Bearer: []
-      summary: Subscribe service plan
+      summary: Subscribes service plan
       tags:
       - market
   /v1/users/me/service-plan-subscriptions/{service_plan_subscription_id}:
@@ -371,7 +434,6 @@ paths:
       - market
   /v1/users/me/wallet:
     get:
-      description: Get wallet info
       responses:
         "200":
           description: OK
@@ -388,7 +450,6 @@ paths:
       - wallet
   /v1/users/me/wallet/recharging:
     put:
-      description: Register to create a user
       parameters:
       - description: Recharge form
         in: body
@@ -416,7 +477,6 @@ paths:
       - wallet
   /v1/users/me/wallet/records:
     get:
-      description: Get wallet records
       responses:
         "200":
           description: OK

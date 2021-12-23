@@ -38,7 +38,7 @@ func InitData(db *gorm.DB) {
 		Password:      util.Encrypt("admin"),
 		Email:         "dave.smith@admin.com",
 		EmailVerified: true,
-		Roles:         []Role{*initialRole0, *initialRole1},
+		Roles:         []*Role{initialRole0, initialRole1},
 	}
 	db.FirstOrCreate(initialUser, User{Username: "admin"})
 }

@@ -11,6 +11,8 @@ func ApiV1(r *gin.Engine) {
 		v1GroupAuth := v1Group.Group("/auth")
 		{
 			v1GroupAuth.POST("/users", CreateUser)
+			v1GroupAuth.POST("/users/:user_id/roles", middleware.Token(), middleware.HasAnyRole("admin"), GrantRole)
+			v1GroupAuth.DELETE("/users/:user_id/roles/:role_id", middleware.Token(), middleware.HasAnyRole("admin"), RevokeRole)
 			v1GroupAuth.POST("/sessions", CreateSession)
 			v1GroupAuth.PUT("/sessions/any/renewing", RenewSession)
 			v1GroupAuth.PUT("/email-validations/any/validating", ValidateEmail)

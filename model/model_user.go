@@ -15,12 +15,18 @@ type User struct {
 	Password      string `gorm:"type:VARCHAR(128)"`
 	Email         string `gorm:"type:VARCHAR(128)"`
 	EmailVerified bool
-	Roles         []Role `gorm:"many2many:user_role;"`
+	Roles         []*Role `gorm:"many2many:user_role;"`
 }
 
 type Role struct {
 	gorm.Model
 	RoleName string `gorm:"type:VARCHAR(24)"`
+}
+
+func GetUser(userID uint64) *User {
+	user := &User{}
+	database.DBConn.Preload("Roles").First(user, userID)
+	return user
 }
 
 func (user *User) Subscribes(sp *ServicePlan, c *gin.Context) {
@@ -55,4 +61,20 @@ func (user *User) Subscribes(sp *ServicePlan, c *gin.Context) {
 		User:                    user,
 	}
 	_ = database.Create(c, billing, "Billing", util.ErrorMessageStatus)
+}
+
+func (user *User) RemoveRole(roleId uint) {
+	targetIndex := -1
+	for i, role := range user.Roles {
+		if role.ID == roleId {
+			fmt.Println(i)
+			targetIndex = i
+		}
+	}
+	fmt.Println(user.Roles)
+	if targetIndex != -1 {
+		user.Roles = append(user.Roles[:targetIndex], user.Roles[targetIndex+1:]...)
+	}
+	fmt.Println(user.Roles)
+	_ = database.DBConn.Model(user).Association("Roles").Replace(user.Roles)
 }

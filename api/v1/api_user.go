@@ -6,6 +6,7 @@ import (
 	"gol-c/database"
 	"gol-c/model"
 	"net/http"
+	"strconv"
 )
 
 type RegisterJsonForm struct {
@@ -43,6 +44,62 @@ func CreateUser(c *gin.Context) {
 	if err != nil {
 		return
 	}
+
+	util.SuccessPack(c).WithHttpResponseCode(http.StatusCreated).Responds()
+}
+
+type GrantRoleForm struct {
+	RoleID uint
+}
+
+// GrantRole
+// @Summary Grant Role
+// @SubscriptionDescription Grant A Role to A User
+// @Tags auth
+// @Security Bearer
+// @Success 201 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Param param body GrantRoleForm true "GrantRoleForm from"
+// @Param user_id path int true "user id"
+// @Router /v1/auth/users/{user_id}/roles [POST]
+func GrantRole(c *gin.Context) {
+	grantRoleForm := &GrantRoleForm{}
+	util.FillJsonForm(c, grantRoleForm)
+
+	userIdStr := c.Param("user_id")
+	userIdU64, _ := strconv.ParseUint(userIdStr, 10, 32)
+
+	targetUser := &model.User{}
+	database.Get(uint(userIdU64), targetUser)
+
+	targetRole := &model.Role{}
+	database.Get(grantRoleForm.RoleID, targetRole)
+
+	targetUser.Roles = append(targetUser.Roles, targetRole)
+	_ = database.Update(c, targetUser, "User Role", util.ErrorMessageStatus)
+
+	util.SuccessPack(c).WithHttpResponseCode(http.StatusCreated).Responds()
+}
+
+// RevokeRole
+// @Summary Revoke Role
+// @SubscriptionDescription Revoke A Role from A User
+// @Tags auth
+// @Security Bearer
+// @Success 201 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Param user_id path int true "user id"
+// @Param role_id path int true "role id"
+// @Router /v1/auth/users/{user_id}/roles/{role_id} [DELETE]
+func RevokeRole(c *gin.Context) {
+	userIdStr := c.Param("user_id")
+	userIdU64, _ := strconv.ParseUint(userIdStr, 10, 32)
+
+	roleIdStr := c.Param("role_id")
+	roleIdU64, _ := strconv.ParseUint(roleIdStr, 10, 32)
+
+	targetUser := model.GetUser(userIdU64)
+	targetUser.RemoveRole(uint(roleIdU64))
 
 	util.SuccessPack(c).WithHttpResponseCode(http.StatusCreated).Responds()
 }
