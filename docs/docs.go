@@ -194,6 +194,39 @@ var doc = `{
                 }
             }
         },
+        "/v1/auth/users/me": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get Current User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/auth/users/{user_id}/roles": {
             "post": {
                 "security": [
@@ -658,10 +691,10 @@ var doc = `{
         "util.Pack": {
             "type": "object",
             "properties": {
-                "Meta": {
+                "body": {},
+                "meta": {
                     "$ref": "#/definitions/util.Meta"
-                },
-                "data": {}
+                }
             }
         },
         "v1.GrantRoleForm": {

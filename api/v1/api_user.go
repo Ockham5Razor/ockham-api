@@ -48,6 +48,19 @@ func CreateUser(c *gin.Context) {
 	util.SuccessPack(c).WithHttpResponseCode(http.StatusCreated).Responds()
 }
 
+// GetMe
+// @Summary Get Current User
+// @SubscriptionDescription Get current user
+// @Tags auth
+// @Security Bearer
+// @Success 200 {object} util.Pack
+// @Failure 409,500 {object} util.Pack
+// @Router /v1/auth/users/me [GET]
+func GetMe(c *gin.Context) {
+	user, _ := c.Get("user")
+	util.SuccessPack(c).WithHttpResponseCode(http.StatusOK).WithData(user).Responds()
+}
+
 type GrantRoleForm struct {
 	RoleID uint
 }

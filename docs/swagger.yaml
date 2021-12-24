@@ -9,9 +9,9 @@ definitions:
     type: object
   util.Pack:
     properties:
-      Meta:
+      body: {}
+      meta:
         $ref: '#/definitions/util.Meta'
-      data: {}
     type: object
   v1.GrantRoleForm:
     properties:
@@ -273,6 +273,26 @@ paths:
       security:
       - Bearer: []
       summary: Revoke Role
+      tags:
+      - auth
+  /v1/auth/users/me:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      security:
+      - Bearer: []
+      summary: Get Current User
       tags:
       - auth
   /v1/recharge-codes/none/batch-generations:

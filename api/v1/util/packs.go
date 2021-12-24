@@ -12,8 +12,8 @@ type Meta struct {
 type Pack struct {
 	context          *gin.Context
 	httpResponseCode int
-	Meta             Meta        `json:"Meta"`
-	Data             interface{} `json:"data"`
+	Meta             Meta        `json:"meta"`
+	Body             interface{} `json:"body"`
 }
 
 func SuccessPack(c *gin.Context) *Pack {
@@ -24,7 +24,7 @@ func SuccessPack(c *gin.Context) *Pack {
 			Success: true,
 			Message: "OK!",
 		},
-		Data: nil,
+		Body: nil,
 	}
 }
 
@@ -36,7 +36,7 @@ func ErrorPack(c *gin.Context) *Pack {
 			Success: false,
 			Message: "ERROR!",
 		},
-		Data: nil,
+		Body: nil,
 	}
 }
 
@@ -46,7 +46,7 @@ func (p *Pack) WithMessage(message string) *Pack {
 }
 
 func (p *Pack) WithData(data interface{}) *Pack {
-	p.Data = data
+	p.Body = data
 	return p
 }
 
