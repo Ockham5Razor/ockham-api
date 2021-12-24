@@ -2,7 +2,7 @@ package util
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"ockham-api/config"
 	"time"
 )
