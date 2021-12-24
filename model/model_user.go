@@ -19,8 +19,8 @@ type User struct {
 }
 
 type Role struct {
-	gorm.Model
-	RoleName string `gorm:"type:VARCHAR(24)"`
+	gorm.Model `json:"-"`
+	RoleName   string `gorm:"type:VARCHAR(24)" json:"role_name"`
 }
 
 func GetUser(userID uint64) *User {
@@ -77,4 +77,14 @@ func (user *User) RemoveRole(roleId uint) {
 	}
 	fmt.Println(user.Roles)
 	_ = database.DBConn.Model(user).Association("Roles").Replace(user.Roles)
+}
+
+func (user *User) GetJSON() gin.H {
+	//database.GetByField()
+	return gin.H{
+		"id":       user.ID,
+		"username": user.Username,
+		"nickname": user.Username,
+		"roles":    user.Roles,
+	}
 }

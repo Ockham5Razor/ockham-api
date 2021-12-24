@@ -99,7 +99,7 @@ func CurrentUser() gin.HandlerFunc {
 			}
 			username := jwtClaims.Username
 			user := &model.User{}
-			database.DBConn.First(user, &model.User{Username: username})
+			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
 			c.Set("user", user)
 			c.Next()
 		} else {

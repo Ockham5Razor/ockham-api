@@ -58,7 +58,8 @@ func CreateUser(c *gin.Context) {
 // @Router /v1/auth/users/me [GET]
 func GetMe(c *gin.Context) {
 	user, _ := c.Get("user")
-	util.SuccessPack(c).WithHttpResponseCode(http.StatusOK).WithData(user).Responds()
+	userObj := user.(*model.User)
+	util.SuccessPack(c).WithHttpResponseCode(http.StatusOK).WithData(userObj.GetJSON()).Responds()
 }
 
 type GrantRoleForm struct {
