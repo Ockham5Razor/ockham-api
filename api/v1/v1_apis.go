@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gol-c/api/v1/middleware"
+	"gol-c/api/v1/util"
 )
 
 func ApiV1(r *gin.Engine) {
@@ -42,4 +44,10 @@ func ApiV1(r *gin.Engine) {
 			v1GroupServicePlans.POST("/users/me/service-plan-subscriptions", middleware.Token(), middleware.HasAnyRole("user"), SubscribeServicePlan)
 		}
 	}
+}
+
+func DefaultHttp404(r *gin.Engine) {
+	r.NoRoute(func(c *gin.Context) {
+		util.ErrorMessageStatus(c, fmt.Sprintf("Not found for request [%v] %v", c.Request.Method, c.Request.URL.Path), 404)
+	})
 }
