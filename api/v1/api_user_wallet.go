@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gol-c/api/v1/util"
-	"gol-c/database"
-	"gol-c/model"
 	"gorm.io/gorm"
 	"net/http"
+	"ockham-api/api/v1/util"
+	"ockham-api/database"
+	"ockham-api/model"
 )
 
 // GetWalletInfo

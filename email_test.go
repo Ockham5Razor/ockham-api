@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gol-c/config"
-	"gol-c/email"
+	"ockham-api/config"
+	"ockham-api/email"
 	"testing"
 )
 

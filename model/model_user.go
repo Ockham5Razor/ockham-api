@@ -3,9 +3,9 @@ package model
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gol-c/api/v1/util"
-	"gol-c/database"
 	"gorm.io/gorm"
+	"ockham-api/api/v1/util"
+	"ockham-api/database"
 	"time"
 )
 

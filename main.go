@@ -4,15 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	v1 "gol-c/api/v1"
-	"gol-c/database"
-	_ "gol-c/docs"
-	"gol-c/model"
+	v1 "ockham-api/api/v1"
+	"ockham-api/database"
+	_ "ockham-api/docs"
+	"ockham-api/model"
 )
 
-// @title Gol-C API
+// @title Ockham API
 // @version 1.0
-// @description All APIs of Gol-C Project
+// @description All APIs of Ockham Project
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name API Support

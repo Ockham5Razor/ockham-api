@@ -1,9 +1,9 @@
 package model
 
 import (
-	"gol-c/config"
-	"gol-c/util"
 	"gorm.io/gorm"
+	"ockham-api/config"
+	"ockham-api/util"
 	"time"
 )
 

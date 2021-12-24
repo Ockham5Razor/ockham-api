@@ -3,7 +3,7 @@ package util
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"gol-c/config"
+	"ockham-api/config"
 	"time"
 )
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gol-c/util"
+	"ockham-api/util"
 	"testing"
 )
 
@@ -11,6 +11,6 @@ func TestCuuid(t *testing.T) {
 	fmt.Println(s)
 }
 
-func TestJwt(t *testing.T)  {
+func TestJwt(t *testing.T) {
 	fmt.Println(util.GenToken("dave.smith", "idXsw2fasaxalrgpc"))
 }

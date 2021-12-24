@@ -4,8 +4,8 @@ import (
 	"crypto/rand"
 	"fmt"
 	"github.com/go-basic/uuid"
-	"gol-c/config"
 	"gorm.io/gorm"
+	"ockham-api/config"
 	"strings"
 	"time"
 )

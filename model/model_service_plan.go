@@ -1,8 +1,8 @@
 package model
 
 import (
-	"gol-c/database"
 	"gorm.io/gorm"
+	"ockham-api/database"
 )
 
 type ServicePlan struct {

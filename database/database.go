@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
-	"gol-c/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
+	"ockham-api/config"
 )
 
 var DBConn *gorm.DB

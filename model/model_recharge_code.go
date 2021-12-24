@@ -2,8 +2,8 @@ package model
 
 import (
 	"database/sql"
-	"gol-c/util"
 	"gorm.io/gorm"
+	"ockham-api/util"
 )
 
 type RechargeCode struct {

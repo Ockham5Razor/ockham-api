@@ -3,11 +3,11 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	apiV1Util "gol-c/api/v1/util"
-	"gol-c/database"
-	"gol-c/model"
-	"gol-c/util"
 	"net/http"
+	apiV1Util "ockham-api/api/v1/util"
+	"ockham-api/database"
+	"ockham-api/model"
+	"ockham-api/util"
 	"strings"
 )
 

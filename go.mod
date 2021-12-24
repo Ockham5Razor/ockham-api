@@ -1,4 +1,4 @@
-module gol-c
+module ockham-api
 
 go 1.17
 

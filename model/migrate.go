@@ -1,8 +1,8 @@
 package model
 
 import (
-	"gol-c/api/v1/util"
 	"gorm.io/gorm"
+	"ockham-api/api/v1/util"
 )
 
 func Migrate(db *gorm.DB) {

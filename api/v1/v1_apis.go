@@ -3,8 +3,8 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gol-c/api/v1/middleware"
-	"gol-c/api/v1/util"
+	"ockham-api/api/v1/middleware"
+	"ockham-api/api/v1/util"
 )
 
 func ApiV1(r *gin.Engine) {

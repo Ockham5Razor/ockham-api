@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"gol-c/api/v1/util"
 	"net/http"
+	"ockham-api/api/v1/util"
 	"strings"
 )
 

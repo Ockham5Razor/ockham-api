@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "All APIs of Gol-C Project",
-        "title": "Gol-C API",
+        "description": "All APIs of Ockham Project",
+        "title": "Ockham API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",

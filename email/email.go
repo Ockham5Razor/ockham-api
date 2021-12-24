@@ -1,9 +1,9 @@
 package email
 
 import (
-	"gol-c/config"
 	"gopkg.in/gomail.v2"
 	_ "gopkg.in/gomail.v2"
+	"ockham-api/config"
 )
 
 func SendEmail(mailTo []string, subject string, body string) error {

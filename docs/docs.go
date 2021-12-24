@@ -812,8 +812,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/api",
 	Schemes:     []string{},
-	Title:       "Gol-C API",
-	Description: "All APIs of Gol-C Project",
+	Title:       "Ockham API",
+	Description: "All APIs of Ockham Project",
 }
 
 type s struct{}
