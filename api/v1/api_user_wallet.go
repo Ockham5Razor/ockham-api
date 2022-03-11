@@ -20,7 +20,7 @@ import (
 // @Failure 400 {object} util.Pack
 // @Router /v1/users/me/wallet [GET]
 func GetWalletInfo(c *gin.Context) {
-	user, userExists := c.Get("user")
+	user, userExists := c.Get(util.ContextCurrentUser)
 	if userExists {
 		userObj := user.(*model.User)
 		wallet := &model.UserWallet{}
@@ -41,7 +41,7 @@ func GetWalletInfo(c *gin.Context) {
 // @Failure 400 {object} util.Pack
 // @Router /v1/users/me/wallet/records [GET]
 func GetRecordsOfWallet(c *gin.Context) {
-	user, userExists := c.Get("user")
+	user, userExists := c.Get(util.ContextCurrentUser)
 	if userExists {
 		userObj := user.(*model.User)
 		walletRecords := &[]model.UserWalletRecord{}
@@ -67,7 +67,7 @@ type RechargeForm struct {
 // @Param param body RechargeForm true "Recharge form"
 // @Router /v1/users/me/wallet/recharging [PUT]
 func RechargeWallet(c *gin.Context) {
-	user, userExists := c.Get("user")
+	user, userExists := c.Get(util.ContextCurrentUser)
 	if userExists {
 		database.DBConn.Begin()
 		userObj := user.(*model.User)

@@ -57,7 +57,7 @@ func CreateUser(c *gin.Context) {
 // @Failure 409,500 {object} util.Pack
 // @Router /v1/auth/users/me [GET]
 func GetMe(c *gin.Context) {
-	user, _ := c.Get("user")
+	user, _ := c.Get(util.ContextCurrentUser)
 	userObj := user.(*model.User)
 	util.SuccessPack(c).WithHttpResponseCode(http.StatusOK).WithData(userObj.GetJSON()).Responds()
 }

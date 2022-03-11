@@ -9,7 +9,8 @@ definitions:
     type: object
   util.Pack:
     properties:
-      body: {}
+      body:
+        type: object
       meta:
         $ref: '#/definitions/util.Meta'
     type: object
@@ -108,6 +109,20 @@ info:
   title: Ockham API
   version: "1.0"
 paths:
+  /v1/agents/{agent_id}/pulse:
+    put:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: AgentPulse
+      tags:
+      - agent
   /v1/auth/email-validations/any/validating:
     put:
       parameters:

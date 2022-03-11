@@ -36,6 +36,9 @@ type Config struct {
 			Secret        string
 			ExpireSeconds time.Duration `yaml:"expire_seconds"`
 		}
+		Signature struct {
+			PrecisionSeconds time.Duration `yaml:"precision_seconds"`
+		}
 	}
 }
 

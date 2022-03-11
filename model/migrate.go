@@ -18,6 +18,7 @@ func Migrate(db *gorm.DB) {
 		&EmailValidation{},
 		&RechargeCode{},
 		&Billing{},
+		&Agent{},
 	}
 
 	for i := 0; i < len(models); i++ {

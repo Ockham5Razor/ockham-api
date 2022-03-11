@@ -22,3 +22,5 @@ auth:
     issuer: ockham-api
     secret: aSyIjIQnv1LT7zEnSv0A # Use your own random password
     expire_seconds: 1800
+  signature:
+    precision_seconds: 60

@@ -13,7 +13,7 @@ import (
 
 func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get("token")
+		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
@@ -24,7 +24,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			username := jwtClaims.Username
 			user := &model.User{}
 			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
-			c.Set("user", user)
+			c.Set(apiV1Util.ContextCurrentUser, user)
 
 			hasRoleSet := make(map[string]bool)
 			roles := user.Roles
@@ -42,7 +42,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			c.Next()
 			return
 		} else {
-			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
+			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusInternalServerError).Responds()
 			c.Abort()
 			return
 		}
@@ -51,7 +51,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 
 func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get("token")
+		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
@@ -62,7 +62,7 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 			username := jwtClaims.Username
 			user := &model.User{}
 			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
-			c.Set("user", user)
+			c.Set(apiV1Util.ContextCurrentUser, user)
 
 			hasRoleSet := make(map[string]bool)
 			roles := user.Roles
@@ -80,7 +80,7 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 			c.Abort()
 			return
 		} else {
-			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
+			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusInternalServerError).Responds()
 			c.Abort()
 			return
 		}
@@ -89,7 +89,7 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get("token")
+		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
@@ -100,7 +100,7 @@ func CurrentUser() gin.HandlerFunc {
 			username := jwtClaims.Username
 			user := &model.User{}
 			database.DBConn.Preload("Roles").First(user, &model.User{Username: username})
-			c.Set("user", user)
+			c.Set(apiV1Util.ContextCurrentUser, user)
 			c.Next()
 		} else {
 			apiV1Util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use token middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
@@ -111,7 +111,7 @@ func CurrentUser() gin.HandlerFunc {
 }
 
 func GetCurrentUser(c *gin.Context) *model.User {
-	userIntf, userExists := c.Get("user")
+	userIntf, userExists := c.Get(apiV1Util.ContextCurrentUser)
 	if userExists {
 		user := userIntf.(*model.User)
 		return user
@@ -119,5 +119,25 @@ func GetCurrentUser(c *gin.Context) *model.User {
 		apiV1Util.ErrorPack(c).WithMessage("Fatal: extracting current user failed.").WithHttpResponseCode(http.StatusInternalServerError).Responds()
 		c.Abort()
 		return nil
+	}
+}
+
+func SignatureCheck(resourceIdPathParamName string, checkFunc func(AccessKeyID string, signatureStrFromClient string, timestampStr string) error) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		resourceIdStr := c.Param(resourceIdPathParamName)
+		signatureValueObj, signatureExists := c.Get(apiV1Util.ContextSignatureValue)
+		timestampValueObj, timestampExists := c.Get(apiV1Util.ContextSignatureValue)
+		if signatureExists && timestampExists {
+			err := checkFunc(resourceIdStr, signatureValueObj.(string), timestampValueObj.(string))
+			if err != nil {
+				apiV1Util.ErrorPack(c).WithMessage(err.Error()).WithHttpResponseCode(http.StatusUnauthorized).Responds()
+				c.Abort()
+			} else {
+				c.Next()
+			}
+		} else {
+			apiV1Util.ErrorPack(c).WithMessage("Signature extracting failed, maybe you should use signature middleware first.").WithHttpResponseCode(http.StatusForbidden).Responds()
+			c.Abort()
+		}
 	}
 }

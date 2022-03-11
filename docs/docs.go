@@ -32,6 +32,28 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/agents/{agent_id}/pulse": {
+            "put": {
+                "tags": [
+                    "agent"
+                ],
+                "summary": "AgentPulse",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/auth/email-validations/any/validating": {
             "put": {
                 "tags": [
@@ -691,7 +713,9 @@ var doc = `{
         "util.Pack": {
             "type": "object",
             "properties": {
-                "body": {},
+                "body": {
+                    "type": "object"
+                },
                 "meta": {
                     "$ref": "#/definitions/util.Meta"
                 }
@@ -881,5 +905,5 @@ func (s *s) ReadDoc() string {
 }
 
 func init() {
-	swag.Register("swagger", &s{})
+	swag.Register(swag.Name, &s{})
 }

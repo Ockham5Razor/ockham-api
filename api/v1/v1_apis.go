@@ -44,6 +44,10 @@ func ApiV1(r *gin.Engine) {
 			v1GroupServicePlans.GET("/users/me/service-plan-subscriptions", middleware.Token(), middleware.HasAnyRole("user"), ListMyServicePlanSubscriptions)
 			v1GroupServicePlans.POST("/users/me/service-plan-subscriptions", middleware.Token(), middleware.HasAnyRole("user"), SubscribeServicePlan)
 		}
+		v1GroupAgents := v1Group.Group("/")
+		{
+			v1GroupAgents.PUT("/agents/:agent_id/pulse", middleware.Signature(), middleware.SignatureCheck("agent_id", CheckAgentSignature), AgentPulse)
+		}
 	}
 }
 
