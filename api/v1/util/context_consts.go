@@ -1,7 +1,8 @@
 package util
 
 const (
-	ContextCurrentUser    = "current_user"
-	ContextBearerValue    = "bearer_body"
-	ContextSignatureValue = "agent_key"
+	ContextCurrentUser    = "cxt_current_user"
+	ContextBearerBody     = "cxt_bearer_body"
+	ContextSignatureValue = "cxt_signature_value"
+	ContextTimestampValue = "cxt_timestamp_value"
 )

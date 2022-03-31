@@ -61,23 +61,22 @@ func AgentPulse(c *gin.Context) {
 	fmt.Println("agentKeyObj:", agentKeyObj)
 }
 
-// CheckAgentSignature check agent signature
-func CheckAgentSignature(resourceIdStr string, signatureStrFromClient string, timestampStr string) error {
-	resourceId, err := strconv.Atoi(resourceIdStr)
+// GetAgentSecretKey get agent secret key
+func GetAgentSecretKey(resourceIdStr string) (string, error) {
+	agentId, err := strconv.Atoi(resourceIdStr)
 	if err != nil {
-		return errors.New("resource id needs to be integer")
+		return "", errors.New("agent_id needs to be integer")
 	}
 
 	agent := &model.Agent{}
-	database.DBConn.Find(agent, resourceId)
+	database.DBConn.Find(agent, agentId)
 	// TODO bad way to check if agent exists.
 	if agent.Name == "" {
-		return errors.New("agent not found")
+		return "", errors.New("agent not found")
 	}
 
-	return nil
+	return agent.SecretAccessKey, nil
 }
-
 
 /*
 curl -X 'PUT' \

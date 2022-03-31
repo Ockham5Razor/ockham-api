@@ -1,23 +1,25 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	apiV1Util "ockham-api/api/v1/util"
+	"ockham-api/config"
 	"ockham-api/database"
 	"ockham-api/model"
 	"ockham-api/util"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
+		token, tokenExists := c.Get(apiV1Util.ContextBearerBody)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
+				apiV1Util.ErrorPack(c).WithMessage("Token extracting failed: %s.", jwtClaimsError.Error()).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -34,7 +36,7 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 			for i := range neededRoles {
 				_, hasOneNeededRole := hasRoleSet[strings.ToLower(neededRoles[i])]
 				if !hasOneNeededRole {
-					apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("User not authorized as %s", neededRoles[i])).WithHttpResponseCode(http.StatusForbidden).Responds()
+					apiV1Util.ErrorPack(c).WithMessage("User not authorized as %s", neededRoles[i]).WithHttpResponseCode(http.StatusForbidden).Responds()
 					c.Abort()
 					return
 				}
@@ -51,11 +53,11 @@ func HasAllRoles(neededRoles ...string) gin.HandlerFunc {
 
 func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
+		token, tokenExists := c.Get(apiV1Util.ContextBearerBody)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
+				apiV1Util.ErrorPack(c).WithMessage("Token extracting failed: %s.", jwtClaimsError.Error()).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -89,11 +91,11 @@ func HasAnyRole(neededRoles ...string) gin.HandlerFunc {
 
 func CurrentUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, tokenExists := c.Get(apiV1Util.ContextBearerValue)
+		token, tokenExists := c.Get(apiV1Util.ContextBearerBody)
 		if tokenExists {
 			jwtClaims, jwtClaimsError := util.ParseToken(token.(string))
 			if jwtClaimsError != nil {
-				apiV1Util.ErrorPack(c).WithMessage(fmt.Sprintf("Token extracting failed: %s.", jwtClaimsError.Error())).WithHttpResponseCode(http.StatusBadRequest).Responds()
+				apiV1Util.ErrorPack(c).WithMessage("Token extracting failed: %s.", jwtClaimsError.Error()).WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
 				return
 			}
@@ -122,17 +124,43 @@ func GetCurrentUser(c *gin.Context) *model.User {
 	}
 }
 
-func SignatureCheck(resourceIdPathParamName string, checkFunc func(AccessKeyID string, signatureStrFromClient string, timestampStr string) error) gin.HandlerFunc {
+func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecretFunc func(AccessKeyID string) (string, error)) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		resourceIdStr := c.Param(resourceIdPathParamName)
 		signatureValueObj, signatureExists := c.Get(apiV1Util.ContextSignatureValue)
-		timestampValueObj, timestampExists := c.Get(apiV1Util.ContextSignatureValue)
+		timestampValueObj, timestampExists := c.Get(apiV1Util.ContextTimestampValue)
 		if signatureExists && timestampExists {
-			err := checkFunc(resourceIdStr, signatureValueObj.(string), timestampValueObj.(string))
+			// 校验时间戳
+			timestampStr := timestampValueObj.(string)
+			i, err := strconv.ParseInt(timestampStr, 10, 64)
+			if err != nil {
+				panic(err)
+			}
+			sigTime := time.Unix(i, 0)
+			now := time.Now()
+			secondsAgo := now.Add(config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
+			secondsAfter := now.Add(config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
+			if sigTime.After(secondsAfter) || sigTime.Before(secondsAgo) { // 在容忍时间内
+				apiV1Util.ErrorPack(c).WithMessage("expired or invalid signing time").WithHttpResponseCode(http.StatusBadRequest).Responds()
+				c.Abort()
+			}
+
+			// 取得资源密钥
+			resourceSecretKey, err := getResourceSecretFunc(resourceIdStr)
 			if err != nil {
 				apiV1Util.ErrorPack(c).WithMessage(err.Error()).WithHttpResponseCode(http.StatusUnauthorized).Responds()
 				c.Abort()
 			} else {
+				err, sigFromClient := apiV1Util.DecodeSignature(signatureValueObj.(string))
+				if err != nil {
+					apiV1Util.ErrorPack(c).WithMessage(err.Error()).WithHttpResponseCode(http.StatusUnauthorized).Responds()
+					c.Abort()
+				}
+				sigGen := apiV1Util.CreateSignature(c.Request, resourceIdStr, resourceSecretKey, actionType)
+				if !apiV1Util.Compare(sigGen.Signature, sigFromClient.Signature) {
+					apiV1Util.ErrorPack(c).WithMessage("invalid signature").WithHttpResponseCode(http.StatusUnauthorized).Responds()
+					c.Abort()
+				}
 				c.Next()
 			}
 		} else {

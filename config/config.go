@@ -37,7 +37,7 @@ type Config struct {
 			ExpireSeconds time.Duration `yaml:"expire_seconds"`
 		}
 		Signature struct {
-			PrecisionSeconds time.Duration `yaml:"precision_seconds"`
+			TimestampToleranceSeconds time.Duration `yaml:"timestamp_tolerance_seconds"`
 		}
 	}
 }

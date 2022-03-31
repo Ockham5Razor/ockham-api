@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,8 +41,8 @@ func ErrorPack(c *gin.Context) *Pack {
 	}
 }
 
-func (p *Pack) WithMessage(message string) *Pack {
-	p.Meta.Message = message
+func (p *Pack) WithMessage(message string, a ...interface{}) *Pack {
+	p.Meta.Message = fmt.Sprintf(message, a)
 	return p
 }
 

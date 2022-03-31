@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -81,7 +80,7 @@ func RechargeWallet(c *gin.Context) {
 		if err == nil {
 			util.SuccessPack(c).WithMessage("Recharging succeeded!").WithHttpResponseCode(http.StatusCreated).Responds()
 		} else {
-			util.ErrorPack(c).WithMessage(fmt.Sprintf("Recharging failed: %s.", err.Error())).WithHttpResponseCode(http.StatusGone).Responds()
+			util.ErrorPack(c).WithMessage("Recharging failed: %s.", err.Error()).WithHttpResponseCode(http.StatusGone).Responds()
 		}
 	} else {
 		util.ErrorPack(c).WithMessage("Token extracting failed, maybe you should use current user middleware first.").WithHttpResponseCode(http.StatusBadRequest).Responds()

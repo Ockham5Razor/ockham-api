@@ -1,6 +1,8 @@
 package util
 
 const (
-	HeaderToken     = "Authorization"
-	HeaderTimestamp = "X-Timestamp"
+	HeaderToken       = "Authorization"
+	HeaderContentType = "Content-Type"
+	HeaderHost        = "Host"
+	HeaderTimestamp   = "X-Timestamp"
 )
