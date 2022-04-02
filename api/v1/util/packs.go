@@ -42,7 +42,11 @@ func ErrorPack(c *gin.Context) *Pack {
 }
 
 func (p *Pack) WithMessage(message string, a ...interface{}) *Pack {
-	p.Meta.Message = fmt.Sprintf(message, a)
+	if len(a) == 0 {
+		p.Meta.Message = message
+	} else {
+		p.Meta.Message = fmt.Sprintf(message, a)
+	}
 	return p
 }
 
