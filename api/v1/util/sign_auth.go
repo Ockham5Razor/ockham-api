@@ -96,7 +96,7 @@ func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType
 		signedHeaderValues = append(signedHeaderValues, req.Header.Get(header))
 	}
 	// 拼接成串
-	unsignedHeaderValStr := strings.Join(signedHeaders, ";")
+	unsignedHeaderValStr := strings.Join(signedHeaderValues, ";")
 	key := []byte(secretAccessKey)
 	m := hmac.New(sha256.New, key)
 	m.Write([]byte(unsignedHeaderValStr))
