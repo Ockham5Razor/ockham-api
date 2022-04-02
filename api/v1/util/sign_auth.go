@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -85,7 +86,17 @@ func DecodeSignature(signatureBody string) (err error, signature Signature) {
 	return nil, signature
 }
 
-func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType string, signedHeaders ...string) Signature {
+func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType string, signedHeaders ...string) (Signature, error) {
+	// Request Body 摘要
+	var bodyDigestBytes []byte
+	if req.Body != nil {
+		bodyBytes, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return Signature{}, err
+		}
+		bodyDigestBytes = bodyBytes[0:128]
+	}
+
 	// 如果没有传入，则使用默认头
 	if len(signedHeaders) == 0 {
 		signedHeaders = defaultSignedHeaders
@@ -93,13 +104,22 @@ func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType
 	// 按位排序
 	var signedHeaderValues []string
 	for _, header := range signedHeaders {
-		signedHeaderValues = append(signedHeaderValues, req.Header.Get(header))
+		var headerVal string
+		if header == HeaderHost {
+			headerVal = req.Host
+		} else {
+			headerVal = req.Header.Get(header)
+		}
+		signedHeaderValues = append(signedHeaderValues, headerVal)
 	}
 	// 拼接成串
 	unsignedHeaderValStr := strings.Join(signedHeaderValues, ";")
+	var zeroSpace = append([]byte{}, 0)
 	key := []byte(secretAccessKey)
 	m := hmac.New(sha256.New, key)
-	m.Write([]byte(unsignedHeaderValStr))
+	m.Write([]byte(unsignedHeaderValStr)) // 写入头
+	m.Write(zeroSpace)                    // 写入零值分隔符
+	m.Write(bodyDigestBytes)              // 写入摘要
 	signature := hex.EncodeToString(m.Sum(nil))
 
 	return Signature{
@@ -110,5 +130,5 @@ func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType
 		}{AccessKeyID: accessKeyID, Action: actionType},
 		SignedHeaders: signedHeaders,
 		Signature:     signature,
-	}
+	}, nil
 }

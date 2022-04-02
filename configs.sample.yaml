@@ -24,3 +24,4 @@ auth:
     expire_seconds: 1800
   signature:
     timestamp_tolerance_seconds: 60
+    body_digest_truncate_bytes: 128

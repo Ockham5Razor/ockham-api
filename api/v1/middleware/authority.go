@@ -138,7 +138,7 @@ func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecre
 			}
 			sigTime := time.Unix(i, 0)
 			now := time.Now()
-			secondsAgo := now.Add(config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
+			secondsAgo := now.Add(-config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
 			secondsAfter := now.Add(config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
 			if sigTime.After(secondsAfter) || sigTime.Before(secondsAgo) { // 在容忍时间内
 				apiV1Util.ErrorPack(c).WithMessage("expired or invalid signing time").WithHttpResponseCode(http.StatusBadRequest).Responds()
@@ -159,7 +159,12 @@ func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecre
 					c.Abort()
 					return
 				}
-				sigGen := apiV1Util.CreateSignature(c.Request, resourceIdStr, resourceSecretKey, actionType)
+				sigGen, err := apiV1Util.CreateSignature(c.Request, resourceIdStr, resourceSecretKey, actionType)
+				if err != nil {
+					apiV1Util.ErrorPack(c).WithMessage("internal server error").WithHttpResponseCode(http.StatusInternalServerError).Responds()
+					c.Abort()
+					return
+				}
 				if !apiV1Util.Compare(sigGen.Signature, sigFromClient.Signature) {
 					apiV1Util.ErrorPack(c).WithMessage("invalid signature").WithHttpResponseCode(http.StatusUnauthorized).Responds()
 					c.Abort()

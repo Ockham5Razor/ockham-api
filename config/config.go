@@ -38,6 +38,7 @@ type Config struct {
 		}
 		Signature struct {
 			TimestampToleranceSeconds time.Duration `yaml:"timestamp_tolerance_seconds"`
+			BodyDigestTruncateBytes   int           `yaml:"body_digest_truncate_bytes"`
 		}
 	}
 }
