@@ -60,6 +60,10 @@ func (p *Pack) Responds() {
 	p.context.JSON(p.httpResponseCode, p)
 }
 
+func (p *Pack) RespondsBodyOnly() {
+	p.context.JSON(p.httpResponseCode, p.Body)
+}
+
 func ErrorMessageStatus(c *gin.Context, message string, status int) {
 	ErrorPack(c).WithMessage(message).WithHttpResponseCode(status).Responds()
 }

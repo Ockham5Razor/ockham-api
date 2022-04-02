@@ -52,7 +52,7 @@ func DeleteAgent(c *gin.Context) {
 // @SubscriptionDescription Get config JSON for v2ray agent.
 // @Tags agent
 // @Param agent_id path int true "agent id"
-// @Success 200 {object} util.Pack
+// @Success 200 {object} model.V2RayConfig
 // @Failure 500 {object} util.Pack
 // @Router /v1/agents/{agent_id}/config [GET]
 func GetAgentConfig(c *gin.Context) {
@@ -64,7 +64,7 @@ func GetAgentConfig(c *gin.Context) {
 		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Agent not found!").Responds()
 	} else {
 		conf := model.GenConfig(agent.ServerPort, 8080, agent.WsPath)
-		util.SuccessPack(c).WithData(conf).Responds()
+		util.SuccessPack(c).WithData(conf).RespondsBodyOnly()
 	}
 }
 
