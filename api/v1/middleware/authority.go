@@ -143,6 +143,7 @@ func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecre
 			if sigTime.After(secondsAfter) || sigTime.Before(secondsAgo) { // 在容忍时间内
 				apiV1Util.ErrorPack(c).WithMessage("expired or invalid signing time").WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()
+				return
 			}
 
 			// 取得资源密钥
@@ -150,16 +151,19 @@ func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecre
 			if err != nil {
 				apiV1Util.ErrorPack(c).WithMessage(err.Error()).WithHttpResponseCode(http.StatusUnauthorized).Responds()
 				c.Abort()
+				return
 			} else {
 				err, sigFromClient := apiV1Util.DecodeSignature(signatureValueObj.(string))
 				if err != nil {
 					apiV1Util.ErrorPack(c).WithMessage(err.Error()).WithHttpResponseCode(http.StatusUnauthorized).Responds()
 					c.Abort()
+					return
 				}
 				sigGen := apiV1Util.CreateSignature(c.Request, resourceIdStr, resourceSecretKey, actionType)
 				if !apiV1Util.Compare(sigGen.Signature, sigFromClient.Signature) {
 					apiV1Util.ErrorPack(c).WithMessage("invalid signature").WithHttpResponseCode(http.StatusUnauthorized).Responds()
 					c.Abort()
+					return
 				}
 				c.Next()
 			}
