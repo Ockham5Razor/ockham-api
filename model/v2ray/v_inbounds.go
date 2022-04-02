@@ -44,22 +44,21 @@ type ConfInboundsItem struct {
 	Allocate       *ConfInboundsItemAllocate       `json:"allocate,omitempty"`
 }
 
-func (i *ConfInboundsItem) AsDokodemo() *ConfInboundsItem {
+func (i *ConfInboundsItem) AsDokodemo(port int) *ConfInboundsItem {
 	i.Protocol = InboundProtocolDokodemoDoor
 	i.Listen = "0.0.0.0"
-	i.Port = 8080
+	i.Port = port
 	i.Tag = "api"
 	i.Settings = inbound_protocol.ConfDokodemoDoorSettings{
 		Address: "0.0.0.0",
-		Port:    8080,
 	}
 	return i
 }
 
-func (i *ConfInboundsItem) AsInboundVmess() *ConfInboundsItem {
+func (i *ConfInboundsItem) AsInboundVmess(port int, websocketPath string) *ConfInboundsItem {
 	i.Protocol = InboundProtocolVmess
 	i.Listen = "0.0.0.0"
-	i.Port = 10086
+	i.Port = port
 	i.Tag = "proxy"
 	i.Settings = inbound_protocol.ConfVmessSettings{
 		Clients:                   []inbound_protocol.ConfVmessSettingsClientsItem{},
@@ -68,7 +67,7 @@ func (i *ConfInboundsItem) AsInboundVmess() *ConfInboundsItem {
 	i.StreamSettings = &ConfInboundsItemStreamSettings{
 		Network: "ws",
 		WsSettings: &ConfInboundsItemStreamSettingsWsSettings{
-			Path: "/access-may/",
+			Path: websocketPath,
 		},
 	}
 	return i

@@ -46,6 +46,7 @@ func ApiV1(r *gin.Engine) {
 		}
 		v1GroupAgents := v1Group.Group("/")
 		{
+			v1GroupAgents.GET("/agents/:agent_id/config", GetAgentConfig)
 			v1GroupAgents.PUT("/agents/:agent_id/pulse", middleware.Signature(), middleware.SignatureCheck("agent_id", "agent_pulse", GetAgentSecretKey), AgentPulse)
 		}
 	}

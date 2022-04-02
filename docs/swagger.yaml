@@ -109,8 +109,34 @@ info:
   title: Ockham API
   version: "1.0"
 paths:
+  /v1/agents/{agent_id}/config:
+    get:
+      parameters:
+      - description: agent id
+        in: path
+        name: agent_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: GetAgentConfig
+      tags:
+      - agent
   /v1/agents/{agent_id}/pulse:
     put:
+      parameters:
+      - description: agent id
+        in: path
+        name: agent_id
+        required: true
+        type: integer
       responses:
         "200":
           description: OK

@@ -32,12 +32,52 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/agents/{agent_id}/config": {
+            "get": {
+                "tags": [
+                    "agent"
+                ],
+                "summary": "GetAgentConfig",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "agent id",
+                        "name": "agent_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/agents/{agent_id}/pulse": {
             "put": {
                 "tags": [
                     "agent"
                 ],
                 "summary": "AgentPulse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "agent id",
+                        "name": "agent_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

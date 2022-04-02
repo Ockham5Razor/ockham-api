@@ -20,15 +20,15 @@ func (vc *V2RayConfig) AsJSON() string {
 	return string(jsonData)
 }
 
-func GenDefaultConfig() V2RayConfig {
+func GenConfig(inboundPort, apiPort int, websocketPath string) V2RayConfig {
 	return V2RayConfig{
 		Stats:  struct{}{},
 		Api:    (&v2ray.ConfApi{}).AsDefault(),
 		Log:    (&v2ray.ConfLog{}).AsDefault(),
 		Policy: (&v2ray.ConfPolicy{}).AsDefault(),
 		Inbounds: []*v2ray.ConfInboundsItem{
-			(&v2ray.ConfInboundsItem{}).AsInboundVmess(),
-			(&v2ray.ConfInboundsItem{}).AsDokodemo(),
+			(&v2ray.ConfInboundsItem{}).AsInboundVmess(inboundPort, websocketPath),
+			(&v2ray.ConfInboundsItem{}).AsDokodemo(apiPort),
 		},
 		Outbounds: []*v2ray.ConfOutboundsItem{
 			(&v2ray.ConfOutboundsItem{}).AsFreedom(),

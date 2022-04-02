@@ -79,7 +79,7 @@ func CreateServicePlan(c *gin.Context) {
 // @Success 200 {object} util.Pack
 // @Router /v1/service-plans/{service_plan_id} [GET]
 func GetServicePlans(c *gin.Context) {
-	idStr := c.Param("service_plan_subscription_id")
+	idStr := c.Param("service_plan_id")
 	idU64, _ := strconv.ParseUint(idStr, 10, 32)
 	servicePlan := &model.ServicePlan{}
 	ctx := database.DBConn.Find(servicePlan, idU64)

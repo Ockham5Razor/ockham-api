@@ -6,6 +6,6 @@ import (
 )
 
 func TestV2RayConfJSON(t *testing.T) {
-	v2RayConf := GenDefaultConfig()
+	v2RayConf := GenConfig(10086, 8080, "/some-path/")
 	fmt.Println(v2RayConf.AsJSON())
 }

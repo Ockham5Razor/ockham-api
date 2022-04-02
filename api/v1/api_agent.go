@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"ockham-api/api/v1/util"
 	"ockham-api/database"
 	"ockham-api/model"
@@ -46,10 +47,32 @@ func DeleteAgent(c *gin.Context) {
 
 }
 
+// GetAgentConfig
+// @Summary GetAgentConfig
+// @SubscriptionDescription Get config JSON for v2ray agent.
+// @Tags agent
+// @Param agent_id path int true "agent id"
+// @Success 200 {object} util.Pack
+// @Failure 500 {object} util.Pack
+// @Router /v1/agents/{agent_id}/config [GET]
+func GetAgentConfig(c *gin.Context) {
+	idStr := c.Param("agent_id")
+	idU64, _ := strconv.ParseUint(idStr, 10, 32)
+	agent := &model.Agent{}
+	ctx := database.DBConn.Find(agent, idU64)
+	if ctx.RowsAffected == 0 {
+		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Agent not found!").Responds()
+	} else {
+		conf := model.GenConfig(agent.ServerPort, 8080, agent.WsPath)
+		util.SuccessPack(c).WithData(conf).Responds()
+	}
+}
+
 // AgentPulse
 // @Summary AgentPulse
 // @SubscriptionDescription Send agent pulse to api server.
 // @Tags agent
+// @Param agent_id path int true "agent id"
 // @Success 200 {object} util.Pack
 // @Failure 500 {object} util.Pack
 // @Router /v1/agents/{agent_id}/pulse [PUT]

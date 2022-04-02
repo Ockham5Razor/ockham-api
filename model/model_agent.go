@@ -12,12 +12,12 @@ type Agent struct {
 	Description string
 	Location    string
 
-	Host       string
-	ServerPort int64
-	ClientPort int64
-	ExternalID int8
-	ListenHost string
-	GrpcHost   string
+	ServerHost string
+	ServerPort int
+	ExternalID int
+	ClientPort int
+	WsHost     string
+	WsPath     string
 
 	Enabled bool
 
