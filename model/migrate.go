@@ -19,6 +19,7 @@ func Migrate(db *gorm.DB) {
 		&RechargeCode{},
 		&Billing{},
 		&Agent{},
+		&AgentRosterToken{},
 	}
 
 	for i := 0; i < len(models); i++ {

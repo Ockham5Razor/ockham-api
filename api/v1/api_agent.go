@@ -2,13 +2,13 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"ockham-api/api/v1/util"
 	"ockham-api/database"
 	"ockham-api/model"
 	"strconv"
+	"time"
 )
 
 type CreateAgentForm struct {
@@ -68,6 +68,11 @@ func GetAgentConfig(c *gin.Context) {
 	}
 }
 
+type RosterToken struct {
+	RosterToken string
+	ExpireAt    time.Time
+}
+
 // AgentPulse
 // @Summary AgentPulse
 // @SubscriptionDescription Send agent pulse to api server.
@@ -77,11 +82,33 @@ func GetAgentConfig(c *gin.Context) {
 // @Failure 500 {object} util.Pack
 // @Router /v1/agents/{agent_id}/pulse [PUT]
 func AgentPulse(c *gin.Context) {
-	agentKeyObj, exists := c.Get(util.ContextSignatureValue)
-	if !exists {
-		panic(util.ContextSignatureValue + " not exists in context!")
+	agentIdStr := c.Param("agent_id")
+	agentId, err := strconv.Atoi(agentIdStr)
+	if err != nil {
+		util.ErrorPack(c).WithMessage("illegal path parameter agent_id").WithHttpResponseCode(http.StatusBadRequest).Responds()
+		return
 	}
-	fmt.Println("agentKeyObj:", agentKeyObj)
+
+	targetAgent := &model.Agent{}
+	database.Get(uint(agentId), targetAgent)
+	targetAgent.LastPulse = time.Now()
+	err = database.Update(c, targetAgent, "Agent", util.ErrorMessageStatus)
+	if err != nil {
+		util.ErrorPack(c).WithMessage("update agent error").WithHttpResponseCode(http.StatusInternalServerError).Responds()
+		return
+	}
+
+	rosterToken := model.NewAgentRosterToken(agentId)
+	err = database.Create(c, rosterToken, "AgentRosterToken", util.ErrorMessageStatus)
+	if err != nil {
+		util.ErrorPack(c).WithMessage("update agent error").WithHttpResponseCode(http.StatusInternalServerError).Responds()
+		return
+	}
+
+	util.SuccessPack(c).WithData(RosterToken{
+		RosterToken: rosterToken.Token,
+		ExpireAt:    time.Now().Add(30 * time.Second),
+	}).Responds()
 }
 
 // GetAgentSecretKey get agent secret key
