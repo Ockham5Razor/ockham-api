@@ -9,8 +9,8 @@ import (
 type AgentRosterToken struct {
 	gorm.Model
 
-	AgentId uint
-	Token   string
+	AgentId uint   `gorm:"index:idx_roster_token"`
+	Token   string `gorm:"index:idx_roster_token"`
 }
 
 func b64uuid() string {
