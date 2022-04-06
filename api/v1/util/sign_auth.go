@@ -94,7 +94,14 @@ func CreateSignature(req *http.Request, accessKeyID, secretAccessKey, actionType
 		if err != nil {
 			return Signature{}, err
 		}
-		bodyDigestBytes = bodyBytes[0:128]
+		// 限位，如果没有限位动作，那么会被填充 0
+		digestPickEnd := 0
+		if len(bodyBytes) > 0 && len(bodyBytes) < 128 {
+			digestPickEnd = len(bodyBytes)
+		} else if len(bodyBytes) >= 128 {
+			digestPickEnd = 128
+		}
+		bodyDigestBytes = bodyBytes[0:digestPickEnd]
 	}
 
 	// 如果没有传入，则使用默认头
