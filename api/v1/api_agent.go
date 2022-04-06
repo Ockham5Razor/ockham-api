@@ -69,8 +69,8 @@ func GetAgentConfig(c *gin.Context) {
 }
 
 type RosterToken struct {
-	RosterToken string
-	ExpireAt    time.Time
+	RosterToken string `json:"roster_token"`
+	ExpireAt    string `json:"expire_at"`
 }
 
 // AgentPulse
@@ -107,7 +107,7 @@ func AgentPulse(c *gin.Context) {
 
 	util.SuccessPack(c).WithData(RosterToken{
 		RosterToken: rosterToken.Token,
-		ExpireAt:    time.Now().Add(30 * time.Second),
+		ExpireAt:    strconv.FormatInt(time.Now().Add(30*time.Second).Unix(), 10),
 	}).Responds()
 }
 
