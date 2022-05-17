@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var ConfFilePath = "configs.yaml"
+
 type Config struct {
 	Portal struct {
 		Listen string
@@ -51,7 +53,7 @@ var confOnce sync.Once
 
 func GetConfig() Config {
 	confOnce.Do(func() {
-		data := readConfigFile("configs.yaml")
+		data := readConfigFile(ConfFilePath)
 		err := yaml.Unmarshal(data, &conf)
 		if err != nil {
 			log.Fatalf("error: %v", err)
