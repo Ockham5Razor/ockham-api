@@ -8,6 +8,9 @@ import (
 )
 
 type Config struct {
+	Portal struct {
+		Listen string
+	}
 	Db struct {
 		Host    string
 		Port    int

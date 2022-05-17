@@ -5,6 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	v1 "ockham-api/api/v1"
+	"ockham-api/config"
 	"ockham-api/database"
 	_ "ockham-api/docs"
 	"ockham-api/model"
@@ -47,8 +48,10 @@ func main() {
 	// 定义 404 响应
 	v1.DefaultHttp404(r)
 
+	conf := config.GetConfig()
+
 	// 启动 HTTP 服务
-	err := r.Run(":8080") // listen and serve on 0.0.0.0:8080
+	err := r.Run(conf.Portal.Listen) // listen and serve on 0.0.0.0:8080
 	if err != nil {
 		panic("Failed to listen HTTP port.")
 	}
