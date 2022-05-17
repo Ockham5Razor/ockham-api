@@ -6,18 +6,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// AminCmd represents the admin command
-var AminCmd = &cobra.Command{
-	Use:   "admin",
+// manageCmd represents the admin command
+var manageCmd = &cobra.Command{
+	Use:   "manage",
 	Short: "Admin tools",
 	Long:  `Admin tools that can manage your super user or other functions.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("admin called")
+		fmt.Println("manage called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(AminCmd)
+	rootCmd.AddCommand(manageCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -30,8 +30,8 @@ func init() {
 	// is called directly, e.g.:
 	//adminCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	serveCmd.Flags().StringVarP(&dbHost, "db-host", "d", "localhost", "Database host.")
-	serveCmd.Flags().StringVarP(&dbSchema, "db-schema", "s", "ockham", "Database schema.")
-	serveCmd.Flags().StringVarP(&dbUser, "db-user", "u", "root", "Database username.")
-	serveCmd.Flags().StringVarP(&dbPass, "db-pass", "p", "123456", "Database password.")
+	manageCmd.Flags().StringVarP(&dbHost, "db-host", "d", "localhost", "Database host.")
+	manageCmd.Flags().StringVarP(&dbSchema, "db-schema", "s", "ockham", "Database schema.")
+	manageCmd.Flags().StringVarP(&dbUser, "db-user", "u", "root", "Database username.")
+	manageCmd.Flags().StringVarP(&dbPass, "db-pass", "p", "123456", "Database password.")
 }
