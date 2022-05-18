@@ -9,6 +9,7 @@ require (
 	github.com/gofrs/uuid v4.1.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/spf13/cobra v1.4.0
+	github.com/spf13/viper v1.11.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.3.1
 	github.com/swaggo/swag v1.7.6
@@ -33,7 +34,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -53,7 +53,6 @@ require (
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.11.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
