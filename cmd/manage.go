@@ -29,9 +29,4 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	//adminCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	manageCmd.Flags().StringVarP(&dbHost, "db-host", "d", "localhost", "Database host.")
-	manageCmd.Flags().StringVarP(&dbSchema, "db-schema", "s", "ockham", "Database schema.")
-	manageCmd.Flags().StringVarP(&dbUser, "db-user", "u", "root", "Database username.")
-	manageCmd.Flags().StringVarP(&dbPass, "db-pass", "p", "123456", "Database password.")
 }

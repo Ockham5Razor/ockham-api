@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/spf13/viper"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -25,14 +27,40 @@ func Execute() {
 	}
 }
 
+var cfgFile string
+
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	cobra.OnInitialize(initConfig)
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ockham-api/config.yaml)")
+}
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ockham-api.yaml)")
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+		// Search config in home directory with name ".cobra" (without extension).
+		viper.AddConfigPath(home + "/.ockham-api/")
+		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
+	}
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// Config file not found; ignore error if desired
+			fmt.Println("config file not found.")
+		} else {
+			// Config file was found but another error was produced
+			fmt.Println("config file read other error.")
+		}
+	} else {
+		fmt.Println("using config file: ", viper.ConfigFileUsed())
+	}
+	// Config file found and successfully parsed
 }
