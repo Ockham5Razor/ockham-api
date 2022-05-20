@@ -1,13 +1,4 @@
 # Rename this file as configs.yaml to use.
-portal:
-  listen: 0.0.0.0:8080
-db:
-  host: 127.0.0.1
-  port: 3306
-  user: root
-  pass: 000000
-  schema: gol_c
-  charset: utf8mb4
 email:
   user: tommy1995@163.com
   pass: t0mmy123

@@ -11,12 +11,9 @@ import (
 var DBConn *gorm.DB
 
 func Init() *gorm.DB {
-	// 读取配置
-	conf := config.GetConfig()
-	dbConf := conf.Db
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
-		dbConf.User, dbConf.Pass, dbConf.Host, dbConf.Port, dbConf.Schema, dbConf.Charset,
+		config.DbUser, config.DbPass, config.DbHost, config.DbPort, config.DbSchema, config.DbCharset,
 	)
 	// 连接数据库
 	var err error

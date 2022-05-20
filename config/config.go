@@ -10,17 +10,6 @@ import (
 var ConfFilePath = "configs.yaml"
 
 type Config struct {
-	Portal struct {
-		Listen string
-	}
-	Db struct {
-		Host    string
-		Port    int
-		User    string
-		Pass    string
-		Schema  string
-		Charset string
-	}
 	Email struct {
 		User string
 		Pass string

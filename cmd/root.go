@@ -59,6 +59,7 @@ func initConfig() {
 			// Config file was found but another error was produced
 			fmt.Println("config file read other error.")
 		}
+		os.Exit(2)
 	} else {
 		fmt.Println("using config file: ", viper.ConfigFileUsed())
 	}

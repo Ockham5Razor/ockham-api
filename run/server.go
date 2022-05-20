@@ -29,10 +29,8 @@ func Main() {
 	// 定义 404 响应
 	v1.DefaultHttp404(r)
 
-	conf := config.GetConfig()
-
 	// 启动 HTTP 服务
-	err := r.Run(conf.Portal.Listen) // listen and serve on 0.0.0.0:8080
+	err := r.Run(config.PortalListen)
 	if err != nil {
 		panic("Failed to listen HTTP port.")
 	}
