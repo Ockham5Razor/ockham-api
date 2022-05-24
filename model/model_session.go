@@ -17,9 +17,7 @@ type Session struct {
 	RenewalStock int
 }
 
-var sessionConfig = config.GetConfig().Auth.Session
-
-var sessionExpireDuration = time.Second * sessionConfig.ExpireSeconds
+var sessionExpireDuration = time.Second * time.Duration(config.AuthSessionExpireSeconds)
 
 func CreateSession(user *User) *Session {
 	key := util.GenString()
@@ -29,7 +27,7 @@ func CreateSession(user *User) *Session {
 		SessionKey:   key,
 		SessionToken: body,
 		ExpiredAt:    time.Now().Add(sessionExpireDuration),
-		RenewalStock: sessionConfig.MaximumRenewalTimes,
+		RenewalStock: config.AuthSessionMaximumRenewalTimes,
 	}
 	return session
 }

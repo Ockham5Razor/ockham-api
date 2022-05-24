@@ -20,7 +20,7 @@ type EmailValidation struct {
 }
 
 func NewEmailValidation(user *User) *EmailValidation {
-	expireDuration := config.GetConfig().EmailValidation.ExpireDuration
+	expireDuration := config.EmailValidationExpireDuration
 	duration, err := time.ParseDuration(expireDuration)
 	if err != nil {
 		panic(fmt.Sprintf("Email validation code expire duration error, config value is: '%v'!", expireDuration))

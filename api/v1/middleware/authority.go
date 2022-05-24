@@ -138,8 +138,8 @@ func SignatureCheck(resourceIdPathParamName, actionType string, getResourceSecre
 			}
 			sigTime := time.Unix(i, 0)
 			now := time.Now()
-			secondsAgo := now.Add(-config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
-			secondsAfter := now.Add(config.GetConfig().Auth.Signature.TimestampToleranceSeconds * time.Second)
+			secondsAgo := now.Add(-time.Duration(config.AuthSignatureTimestampToleranceSeconds) * time.Second)
+			secondsAfter := now.Add(time.Duration(config.AuthSignatureTimestampToleranceSeconds) * time.Second)
 			if sigTime.After(secondsAfter) || sigTime.Before(secondsAgo) { // 在容忍时间内
 				apiV1Util.ErrorPack(c).WithMessage("expired or invalid signing time").WithHttpResponseCode(http.StatusBadRequest).Responds()
 				c.Abort()

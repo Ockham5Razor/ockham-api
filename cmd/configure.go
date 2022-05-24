@@ -52,13 +52,15 @@ var configureCmd = &cobra.Command{
 			}
 		}
 
-		if config.DbCharset == "" {
-			fmt.Print("Input client-to-DBS connection charset (utf8mb4): ")
-			fmt.Scanln(&config.DbCharset)
+		/*
 			if config.DbCharset == "" {
-				config.DbCharset = "utf8mb4"
+				fmt.Print("Input client-to-DBS connection charset (utf8mb4): ")
+				fmt.Scanln(&config.DbCharset)
+				if config.DbCharset == "" {
+					config.DbCharset = "utf8mb4"
+				}
 			}
-		}
+		*/
 
 		err := viper.WriteConfig()
 		if err != nil {
@@ -73,27 +75,21 @@ var configureCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(configureCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configureCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configureCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	//configureCmd.Flags().StringVarP(&dbHost, "profile", "", "default", "setting profile")
 	configureCmd.Flags().StringVarP(&config.DbHost, "db-host", "d", "", "Host of config.DbS to connect.")
-	configureCmd.Flags().IntVarP(&config.DbPort, "db-port", "p", 3306, "Port of config.DbS to connect.")
-	configureCmd.Flags().StringVarP(&config.DbSchema, "db-schema", "s", "", "Schema(database) of config.DbS to connect.")
-	configureCmd.Flags().StringVarP(&config.DbUser, "db-user", "u", "", "Username of config.DbS to connect.")
-	configureCmd.Flags().StringVarP(&config.DbPass, "db-pass", "k", "", "Password of config.DbS to connect.")
-	configureCmd.Flags().StringVar(&config.DbCharset, "db-charset", "", "Encoding charset of client-to-DBS connections.")
 	viper.BindPFlag("db.host", configureCmd.Flags().Lookup("db-host"))
+
+	configureCmd.Flags().IntVarP(&config.DbPort, "db-port", "p", 3306, "Port of config.DbS to connect.")
 	viper.BindPFlag("db.port", configureCmd.Flags().Lookup("db-port"))
+
+	configureCmd.Flags().StringVarP(&config.DbSchema, "db-schema", "s", "", "Schema(database) of config.DbS to connect.")
 	viper.BindPFlag("db.schema", configureCmd.Flags().Lookup("db-schema"))
+
+	configureCmd.Flags().StringVarP(&config.DbUser, "db-user", "u", "", "Username of config.DbS to connect.")
 	viper.BindPFlag("db.user", configureCmd.Flags().Lookup("db-user"))
+
+	configureCmd.Flags().StringVarP(&config.DbPass, "db-pass", "k", "", "Password of config.DbS to connect.")
 	viper.BindPFlag("db.pass", configureCmd.Flags().Lookup("db-pass"))
+
+	configureCmd.Flags().StringVar(&config.DbCharset, "db-charset", "utf8mb4", "Encoding charset of client-to-DBS connections.")
 	viper.BindPFlag("db.charset", configureCmd.Flags().Lookup("db-charset"))
 }

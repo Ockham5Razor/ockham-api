@@ -17,11 +17,9 @@ type JwtClaims struct {
 	jwt.StandardClaims
 }
 
-var jwtConfig = config.GetConfig().Auth.Jwt
+var tokenExpireDuration = time.Second * time.Duration(config.AuthJwtExpireSeconds)
 
-var tokenExpireDuration = time.Second * jwtConfig.ExpireSeconds
-
-var jwtSecret = []byte(jwtConfig.Secret)
+var jwtSecret = []byte(config.AuthJwtSecret)
 
 // GenToken 生成JWT
 func GenToken(username string, jti string) (string, error) {
@@ -32,7 +30,7 @@ func GenToken(username string, jti string) (string, error) {
 			Id:        jti,
 			IssuedAt:  now.Unix(),
 			ExpiresAt: now.Add(tokenExpireDuration).Unix(), // 过期时间
-			Issuer:    jwtConfig.Issuer,                    // 签发人
+			Issuer:    config.AuthJwtIssuer,                // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象
