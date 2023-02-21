@@ -25,7 +25,7 @@ func init() {
 	viper.BindPFlag("auth.session.expire_seconds", configureAuthCmd.Flags().Lookup("session-expire-seconds"))
 
 	configureAuthCmd.Flags().IntVar(&config.AuthSessionMaximumRenewalTimes, "session-maximum-renewal-times", 3, "Auth session maximum renewal times.")
-	viper.BindPFlag("auth.session.expire_seconds", configureAuthCmd.Flags().Lookup("session-maximum-renewal-times"))
+	viper.BindPFlag("auth.session.maximum_renewal_times", configureAuthCmd.Flags().Lookup("session-maximum-renewal-times"))
 
 	configureAuthCmd.Flags().StringVar(&config.AuthJwtIssuer, "jwt-issuer", "ockham-api", "Auth JWT issuer.")
 	viper.BindPFlag("auth.jwt.issuer", configureAuthCmd.Flags().Lookup("jwt-issuer"))
@@ -37,8 +37,8 @@ func init() {
 	viper.BindPFlag("auth.jwt.expire_seconds", configureAuthCmd.Flags().Lookup("jwt-expire-seconds"))
 
 	configureAuthCmd.Flags().IntVar(&config.AuthSignatureTimestampToleranceSeconds, "signature-timestamp-tolerance-seconds", 60, "Auth signature tolerance seconds.")
-	viper.BindPFlag("auth.signature.timestamp-tolerance-seconds", configureAuthCmd.Flags().Lookup("signature-timestamp-tolerance-seconds"))
+	viper.BindPFlag("auth.signature.timestamp_tolerance_seconds", configureAuthCmd.Flags().Lookup("signature-timestamp-tolerance-seconds"))
 
 	configureAuthCmd.Flags().IntVar(&config.AuthSignatureBodyDigestTruncateBytes, "signature-body-digest-truncate-bytes", 128, "Auth signature body digest truncate bytes.")
-	viper.BindPFlag("auth.signature.body-digest-truncate-bytes", configureAuthCmd.Flags().Lookup("signature-body-digest-truncate-bytes"))
+	viper.BindPFlag("auth.signature.body_digest_truncate_bytes", configureAuthCmd.Flags().Lookup("signature-body-digest-truncate-bytes"))
 }

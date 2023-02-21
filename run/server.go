@@ -10,7 +10,8 @@ import (
 	"ockham-api/model"
 )
 
-func Main() {
+func Main(portalListen string) {
+	config.FillParams()
 	dbConn := database.Init()
 
 	// 移植数据库
@@ -30,7 +31,7 @@ func Main() {
 	v1.DefaultHttp404(r)
 
 	// 启动 HTTP 服务
-	err := r.Run(config.PortalListen)
+	err := r.Run(portalListen)
 	if err != nil {
 		panic("Failed to listen HTTP port.")
 	}

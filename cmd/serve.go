@@ -11,10 +11,10 @@ var listen string
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Run service",
-	Long:  `Run service.`,
+	Long:  `Run ockham API service.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//config.ConfFilePath = configFile
-		run.Main()
+		run.Main(listen)
 	},
 }
 

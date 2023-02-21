@@ -1,0 +1,24 @@
+email:
+  user: ockham@ockham.com
+  pass: xx1sx2eeg342
+  host: smtp.ockham.com
+  port: 465
+  sign: ockham
+db:
+  host: 127.0.0.1
+  port: 3306
+  schema: ockham
+  user: ockham
+  pass: testtest123123
+  charset: utf8mb4
+auth:
+  session:
+    expire_seconds: 300
+    maximum_renewal_times: 8
+  jwt:
+    issuer: ockham
+    secret: sofinqevi2eonf92n0d301mid
+    expire_seconds: 1800
+  signature:
+    timestamp_tolerance_seconds: 60
+    body_digest_truncate_bytes: 128

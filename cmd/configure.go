@@ -75,19 +75,19 @@ var configureCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(configureCmd)
 
-	configureCmd.Flags().StringVarP(&config.DbHost, "db-host", "d", "", "Host of config.DbS to connect.")
+	configureCmd.Flags().StringVarP(&config.DbHost, "db-host", "d", "", "Host of DBS to connect.")
 	viper.BindPFlag("db.host", configureCmd.Flags().Lookup("db-host"))
 
-	configureCmd.Flags().IntVarP(&config.DbPort, "db-port", "p", 3306, "Port of config.DbS to connect.")
+	configureCmd.Flags().IntVarP(&config.DbPort, "db-port", "p", 3306, "Port of DBS to connect.")
 	viper.BindPFlag("db.port", configureCmd.Flags().Lookup("db-port"))
 
-	configureCmd.Flags().StringVarP(&config.DbSchema, "db-schema", "s", "", "Schema(database) of config.DbS to connect.")
+	configureCmd.Flags().StringVarP(&config.DbSchema, "db-schema", "s", "", "Schema(database) of DBS to connect.")
 	viper.BindPFlag("db.schema", configureCmd.Flags().Lookup("db-schema"))
 
-	configureCmd.Flags().StringVarP(&config.DbUser, "db-user", "u", "", "Username of config.DbS to connect.")
+	configureCmd.Flags().StringVarP(&config.DbUser, "db-user", "u", "", "Username of DBS to connect.")
 	viper.BindPFlag("db.user", configureCmd.Flags().Lookup("db-user"))
 
-	configureCmd.Flags().StringVarP(&config.DbPass, "db-pass", "k", "", "Password of config.DbS to connect.")
+	configureCmd.Flags().StringVarP(&config.DbPass, "db-pass", "k", "", "Password of DBS to connect.")
 	viper.BindPFlag("db.pass", configureCmd.Flags().Lookup("db-pass"))
 
 	configureCmd.Flags().StringVar(&config.DbCharset, "db-charset", "utf8mb4", "Encoding charset of client-to-DBS connections.")
