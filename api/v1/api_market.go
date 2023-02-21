@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"ockham-api/api/v1/form"
 	"ockham-api/api/v1/middleware"
 	"ockham-api/api/v1/util"
 	"ockham-api/database"
@@ -22,36 +23,6 @@ func ListServicePlans(c *gin.Context) {
 	util.SuccessPack(c).WithData(servicePlans).Responds()
 }
 
-type ServicePlanForm struct {
-	PlanTitle       string // 标题
-	PlanDescription string // 描述
-	PlanEnabled     bool   // 启用中
-
-	TermSpacingDays int16 // 循环周期
-	TermTimesTotal  int16 // 总循环次数
-
-	EachTermTrafficBytes          int64 // 每次循环的流量大小
-	EachTermInheritSurplusTraffic bool  // 循环中继承结余流量
-
-	RenewalFee float32 // 每次循环价格
-}
-
-func (_this *ServicePlanForm) toModel() *model.ServicePlan {
-	return &model.ServicePlan{
-		PlanTitle:       _this.PlanTitle,
-		PlanDescription: _this.PlanDescription,
-		PlanEnabled:     _this.PlanEnabled,
-
-		TermSpacingDays: _this.TermSpacingDays,
-		TermsTotal:      _this.TermTimesTotal,
-
-		EachTermIncreasingTrafficBytes: _this.EachTermTrafficBytes,
-		EachTermInheritsSurplusTraffic: _this.EachTermInheritSurplusTraffic,
-
-		SubscriptionFee: _this.RenewalFee,
-	}
-}
-
 // CreateServicePlan
 // @Summary Create service plan
 // @Description Create service plan
@@ -62,9 +33,9 @@ func (_this *ServicePlanForm) toModel() *model.ServicePlan {
 // @Failure 409,500 {object} util.Pack
 // @Router /v1/service-plans [POST]
 func CreateServicePlan(c *gin.Context) {
-	servicePlanForm := &ServicePlanForm{}
+	servicePlanForm := &form.ServicePlanForm{}
 	util.FillJsonForm(c, servicePlanForm)
-	err := database.Create(c, servicePlanForm.toModel(), "ServicePlan", util.ErrorMessageStatus)
+	err := database.Create(c, servicePlanForm.ToModel(), "ServicePlan", util.ErrorMessageStatus)
 	if err != nil {
 		return
 	}

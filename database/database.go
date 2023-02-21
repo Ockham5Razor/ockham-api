@@ -17,6 +17,7 @@ func Init() *gorm.DB {
 	)
 	// 连接数据库
 	var err error
+	fmt.Println(dsn)
 	DBConn, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数名称作为表名

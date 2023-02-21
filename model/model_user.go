@@ -34,26 +34,14 @@ func (user *User) Subscribes(sp *ServicePlan, c *gin.Context) {
 		SubscriptionTitle:       sp.PlanTitle,
 		SubscriptionDescription: sp.PlanDescription,
 		SubscriptionEnabled:     false,
-
-		TermSpacingDays: sp.TermSpacingDays,
-		TermsRemaining:  sp.TermsTotal,
-		TermLastDate:    time.Now(),
-
-		EachTermIncreasingTrafficBytes: sp.EachTermIncreasingTrafficBytes,
-		EachTermInheritsSurplusTraffic: sp.EachTermInheritsSurplusTraffic,
-
-		SubscriptionRenewalAddingTerms:    sp.TermsTotal,
-		SubscriptionRenewalTimesRemaining: 0, // 续期次数：0，不可续订，只能订阅新 plan。
-		SubscriptionRenewalFee:            sp.SubscriptionFee,
-
-		User: user,
+		User:                    *user,
 	}
 	_ = database.Create(c, subscription, "ServicePlanSubscription", util.ErrorMessageStatus)
 
 	billing := &Billing{
 		BillingTitle:            fmt.Sprintf("订阅服务计划"),
 		BillingDescription:      sp.PlanDescription,
-		BillingTotal:            sp.SubscriptionFee,
+		BillingTotal:            sp.PlanPrice,
 		BillingDate:             time.Now(),
 		PaymentDueDate:          time.Now().AddDate(0, 0, 1),
 		PaymentSettled:          false,
