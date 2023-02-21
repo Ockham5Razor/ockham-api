@@ -24,3 +24,7 @@ type Agent struct {
 	LastPulse       time.Time
 	SecretAccessKey string
 }
+
+func (a *Agent) IsDead() bool {
+	return a.LastPulse.Add(1 * time.Minute).After(time.Now())
+}
