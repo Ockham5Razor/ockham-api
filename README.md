@@ -1,6 +1,6 @@
 # Project Ockham
 
-Let you connect to the Internet more stably
+Let you connect to the Internet more stably.
 
 
 Install golang cli tool `cobra`
