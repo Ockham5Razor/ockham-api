@@ -36,7 +36,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Pack"
+                            "$ref": "#/definitions/model.V2RayConfig"
                         }
                     },
                     "500": {
@@ -452,7 +452,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.ServicePlanForm"
+                            "$ref": "#/definitions/form.ServicePlanForm"
                         }
                     }
                 ],
@@ -724,6 +724,71 @@
         }
     },
     "definitions": {
+        "form.ServicePlanForm": {
+            "type": "object",
+            "properties": {
+                "availableTrafficPlans": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "bundledTrafficPlanID": {
+                    "type": "integer"
+                },
+                "planDescription": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "planEnabled": {
+                    "description": "启用中",
+                    "type": "boolean"
+                },
+                "planPrice": {
+                    "type": "number"
+                },
+                "planTitle": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "servingDays": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.V2RayConfig": {
+            "type": "object",
+            "properties": {
+                "api": {
+                    "$ref": "#/definitions/v2ray.ConfApi"
+                },
+                "inbounds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2ray.ConfInboundsItem"
+                    }
+                },
+                "log": {
+                    "$ref": "#/definitions/v2ray.ConfLog"
+                },
+                "outbounds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2ray.ConfOutboundsItem"
+                    }
+                },
+                "policy": {
+                    "$ref": "#/definitions/v2ray.ConfPolicy"
+                },
+                "routing": {
+                    "$ref": "#/definitions/v2ray.ConfRouting"
+                },
+                "stats": {
+                    "description": "流量统计，存在即启用 https://www.v2ray.com/chapter_02/stats.html",
+                    "type": "object"
+                }
+            }
+        },
         "util.Meta": {
             "type": "object",
             "properties": {
@@ -738,9 +803,7 @@
         "util.Pack": {
             "type": "object",
             "properties": {
-                "body": {
-                    "type": "object"
-                },
+                "body": {},
                 "meta": {
                     "$ref": "#/definitions/util.Meta"
                 }
@@ -809,43 +872,6 @@
                 }
             }
         },
-        "v1.ServicePlanForm": {
-            "type": "object",
-            "properties": {
-                "eachTermInheritSurplusTraffic": {
-                    "description": "循环中继承结余流量",
-                    "type": "boolean"
-                },
-                "eachTermTrafficBytes": {
-                    "description": "每次循环的流量大小",
-                    "type": "integer"
-                },
-                "planDescription": {
-                    "description": "描述",
-                    "type": "string"
-                },
-                "planEnabled": {
-                    "description": "启用中",
-                    "type": "boolean"
-                },
-                "planTitle": {
-                    "description": "标题",
-                    "type": "string"
-                },
-                "renewalFee": {
-                    "description": "每次循环价格",
-                    "type": "number"
-                },
-                "termSpacingDays": {
-                    "description": "循环周期",
-                    "type": "integer"
-                },
-                "termTimesTotal": {
-                    "description": "总循环次数",
-                    "type": "integer"
-                }
-            }
-        },
         "v1.SubscribeServicePlanForm": {
             "type": "object",
             "properties": {
@@ -868,6 +894,252 @@
                     "type": "string"
                 }
             }
+        },
+        "v2ray.ConfApi": {
+            "type": "object",
+            "properties": {
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfInboundsItem": {
+            "type": "object",
+            "properties": {
+                "allocate": {
+                    "$ref": "#/definitions/v2ray.ConfInboundsItemAllocate"
+                },
+                "listen": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "protocol": {
+                    "$ref": "#/definitions/v2ray.InboundProtocol"
+                },
+                "settings": {},
+                "sniffing": {
+                    "$ref": "#/definitions/v2ray.ConfInboundsItemSniffing"
+                },
+                "streamSettings": {
+                    "$ref": "#/definitions/v2ray.ConfInboundsItemStreamSettings"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfInboundsItemAllocate": {
+            "type": "object",
+            "properties": {
+                "concurrency": {
+                    "type": "integer"
+                },
+                "refresh": {
+                    "type": "integer"
+                },
+                "strategy": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfInboundsItemSniffing": {
+            "type": "object",
+            "properties": {
+                "destOverride": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "v2ray.ConfInboundsItemStreamSettings": {
+            "type": "object",
+            "properties": {
+                "network": {
+                    "type": "string"
+                },
+                "wsSettings": {
+                    "$ref": "#/definitions/v2ray.ConfInboundsItemStreamSettingsWsSettings"
+                }
+            }
+        },
+        "v2ray.ConfInboundsItemStreamSettingsWsSettings": {
+            "type": "object",
+            "properties": {
+                "headers": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfLog": {
+            "type": "object",
+            "properties": {
+                "access": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "loglevel": {
+                    "$ref": "#/definitions/v2ray.LogLevel"
+                }
+            }
+        },
+        "v2ray.ConfOutboundsItem": {
+            "type": "object",
+            "properties": {
+                "protocol": {
+                    "$ref": "#/definitions/v2ray.OutboundProtocol"
+                },
+                "settings": {
+                    "type": "object"
+                }
+            }
+        },
+        "v2ray.ConfPolicy": {
+            "type": "object",
+            "properties": {
+                "levels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/v2ray.ConfPolicyLevelsValue"
+                    }
+                },
+                "system": {
+                    "$ref": "#/definitions/v2ray.ConfPolicySystem"
+                }
+            }
+        },
+        "v2ray.ConfPolicyLevelsValue": {
+            "type": "object",
+            "properties": {
+                "StatsUserDownlink": {
+                    "type": "boolean"
+                },
+                "bufferSize": {
+                    "type": "integer"
+                },
+                "connIdle": {
+                    "type": "integer"
+                },
+                "downlinkOnly": {
+                    "type": "integer"
+                },
+                "handshake": {
+                    "type": "integer"
+                },
+                "statsUserUplink": {
+                    "type": "boolean"
+                },
+                "uplinkOnly": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v2ray.ConfPolicySystem": {
+            "type": "object",
+            "properties": {
+                "statsInboundDownlink": {
+                    "type": "boolean"
+                },
+                "statsInboundUplink": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "v2ray.ConfRouting": {
+            "type": "object",
+            "properties": {
+                "setting": {
+                    "$ref": "#/definitions/v2ray.ConfRoutingSetting"
+                },
+                "strategy": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfRoutingRulesItem": {
+            "type": "object",
+            "properties": {
+                "inboundTag": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "outboundTag": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "v2ray.ConfRoutingSetting": {
+            "type": "object",
+            "properties": {
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2ray.ConfRoutingRulesItem"
+                    }
+                }
+            }
+        },
+        "v2ray.InboundProtocol": {
+            "type": "string",
+            "enum": [
+                "vmess",
+                "dokodemo-door"
+            ],
+            "x-enum-varnames": [
+                "InboundProtocolVmess",
+                "InboundProtocolDokodemoDoor"
+            ]
+        },
+        "v2ray.LogLevel": {
+            "type": "string",
+            "enum": [
+                "debug",
+                "info",
+                "warning",
+                "error",
+                "none"
+            ],
+            "x-enum-varnames": [
+                "LogLevelDebug",
+                "LogLevelInfo",
+                "LogLevelWarning",
+                "LogLevelError",
+                "LogLevelNone"
+            ]
+        },
+        "v2ray.OutboundProtocol": {
+            "type": "string",
+            "enum": [
+                "freedom"
+            ],
+            "x-enum-varnames": [
+                "OutboundProtocolFreedom"
+            ]
         }
     },
     "securityDefinitions": {

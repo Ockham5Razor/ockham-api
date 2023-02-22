@@ -1,5 +1,49 @@
 basePath: /api
 definitions:
+  form.ServicePlanForm:
+    properties:
+      availableTrafficPlans:
+        items:
+          type: integer
+        type: array
+      bundledTrafficPlanID:
+        type: integer
+      planDescription:
+        description: 描述
+        type: string
+      planEnabled:
+        description: 启用中
+        type: boolean
+      planPrice:
+        type: number
+      planTitle:
+        description: 标题
+        type: string
+      servingDays:
+        type: integer
+    type: object
+  model.V2RayConfig:
+    properties:
+      api:
+        $ref: '#/definitions/v2ray.ConfApi'
+      inbounds:
+        items:
+          $ref: '#/definitions/v2ray.ConfInboundsItem'
+        type: array
+      log:
+        $ref: '#/definitions/v2ray.ConfLog'
+      outbounds:
+        items:
+          $ref: '#/definitions/v2ray.ConfOutboundsItem'
+        type: array
+      policy:
+        $ref: '#/definitions/v2ray.ConfPolicy'
+      routing:
+        $ref: '#/definitions/v2ray.ConfRouting'
+      stats:
+        description: 流量统计，存在即启用 https://www.v2ray.com/chapter_02/stats.html
+        type: object
+    type: object
   util.Meta:
     properties:
       message:
@@ -9,8 +53,7 @@ definitions:
     type: object
   util.Pack:
     properties:
-      body:
-        type: object
+      body: {}
       meta:
         $ref: '#/definitions/util.Meta'
     type: object
@@ -54,33 +97,6 @@ definitions:
       renewalKey:
         type: string
     type: object
-  v1.ServicePlanForm:
-    properties:
-      eachTermInheritSurplusTraffic:
-        description: 循环中继承结余流量
-        type: boolean
-      eachTermTrafficBytes:
-        description: 每次循环的流量大小
-        type: integer
-      planDescription:
-        description: 描述
-        type: string
-      planEnabled:
-        description: 启用中
-        type: boolean
-      planTitle:
-        description: 标题
-        type: string
-      renewalFee:
-        description: 每次循环价格
-        type: number
-      termSpacingDays:
-        description: 循环周期
-        type: integer
-      termTimesTotal:
-        description: 总循环次数
-        type: integer
-    type: object
   v1.SubscribeServicePlanForm:
     properties:
       consolidateBillings:
@@ -96,6 +112,169 @@ definitions:
       validatorKey:
         type: string
     type: object
+  v2ray.ConfApi:
+    properties:
+      services:
+        items:
+          type: string
+        type: array
+      tag:
+        type: string
+    type: object
+  v2ray.ConfInboundsItem:
+    properties:
+      allocate:
+        $ref: '#/definitions/v2ray.ConfInboundsItemAllocate'
+      listen:
+        type: string
+      port:
+        type: integer
+      protocol:
+        $ref: '#/definitions/v2ray.InboundProtocol'
+      settings: {}
+      sniffing:
+        $ref: '#/definitions/v2ray.ConfInboundsItemSniffing'
+      streamSettings:
+        $ref: '#/definitions/v2ray.ConfInboundsItemStreamSettings'
+      tag:
+        type: string
+    type: object
+  v2ray.ConfInboundsItemAllocate:
+    properties:
+      concurrency:
+        type: integer
+      refresh:
+        type: integer
+      strategy:
+        type: string
+    type: object
+  v2ray.ConfInboundsItemSniffing:
+    properties:
+      destOverride:
+        items:
+          type: string
+        type: array
+      enabled:
+        type: boolean
+    type: object
+  v2ray.ConfInboundsItemStreamSettings:
+    properties:
+      network:
+        type: string
+      wsSettings:
+        $ref: '#/definitions/v2ray.ConfInboundsItemStreamSettingsWsSettings'
+    type: object
+  v2ray.ConfInboundsItemStreamSettingsWsSettings:
+    properties:
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      path:
+        type: string
+    type: object
+  v2ray.ConfLog:
+    properties:
+      access:
+        type: string
+      error:
+        type: string
+      loglevel:
+        $ref: '#/definitions/v2ray.LogLevel'
+    type: object
+  v2ray.ConfOutboundsItem:
+    properties:
+      protocol:
+        $ref: '#/definitions/v2ray.OutboundProtocol'
+      settings:
+        type: object
+    type: object
+  v2ray.ConfPolicy:
+    properties:
+      levels:
+        additionalProperties:
+          $ref: '#/definitions/v2ray.ConfPolicyLevelsValue'
+        type: object
+      system:
+        $ref: '#/definitions/v2ray.ConfPolicySystem'
+    type: object
+  v2ray.ConfPolicyLevelsValue:
+    properties:
+      StatsUserDownlink:
+        type: boolean
+      bufferSize:
+        type: integer
+      connIdle:
+        type: integer
+      downlinkOnly:
+        type: integer
+      handshake:
+        type: integer
+      statsUserUplink:
+        type: boolean
+      uplinkOnly:
+        type: integer
+    type: object
+  v2ray.ConfPolicySystem:
+    properties:
+      statsInboundDownlink:
+        type: boolean
+      statsInboundUplink:
+        type: boolean
+    type: object
+  v2ray.ConfRouting:
+    properties:
+      setting:
+        $ref: '#/definitions/v2ray.ConfRoutingSetting'
+      strategy:
+        type: string
+    type: object
+  v2ray.ConfRoutingRulesItem:
+    properties:
+      inboundTag:
+        items:
+          type: string
+        type: array
+      outboundTag:
+        type: string
+      type:
+        type: string
+    type: object
+  v2ray.ConfRoutingSetting:
+    properties:
+      rules:
+        items:
+          $ref: '#/definitions/v2ray.ConfRoutingRulesItem'
+        type: array
+    type: object
+  v2ray.InboundProtocol:
+    enum:
+    - vmess
+    - dokodemo-door
+    type: string
+    x-enum-varnames:
+    - InboundProtocolVmess
+    - InboundProtocolDokodemoDoor
+  v2ray.LogLevel:
+    enum:
+    - debug
+    - info
+    - warning
+    - error
+    - none
+    type: string
+    x-enum-varnames:
+    - LogLevelDebug
+    - LogLevelInfo
+    - LogLevelWarning
+    - LogLevelError
+    - LogLevelNone
+  v2ray.OutboundProtocol:
+    enum:
+    - freedom
+    type: string
+    x-enum-varnames:
+    - OutboundProtocolFreedom
 info:
   contact:
     email: support@swagger.io
@@ -121,7 +300,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Pack'
+            $ref: '#/definitions/model.V2RayConfig'
         "500":
           description: Internal Server Error
           schema:
@@ -382,7 +561,7 @@ paths:
         name: param
         required: true
         schema:
-          $ref: '#/definitions/v1.ServicePlanForm'
+          $ref: '#/definitions/form.ServicePlanForm'
       responses:
         "200":
           description: OK

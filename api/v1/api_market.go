@@ -28,7 +28,7 @@ func ListServicePlans(c *gin.Context) {
 // @Description Create service plan
 // @Tags market
 // @Security Bearer
-// @Param param body ServicePlanForm true "Create service plan form"
+// @Param param body form.ServicePlanForm true "Create service plan form"
 // @Success 200 {object} util.Pack
 // @Failure 409,500 {object} util.Pack
 // @Router /v1/service-plans [POST]
