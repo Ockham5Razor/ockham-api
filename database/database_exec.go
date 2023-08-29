@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -65,12 +66,12 @@ func Updates(c *gin.Context, whereFields interface{}, saveFields interface{}, mo
 	return nil
 }
 
-func Get[D interface{}](id uint, dest *D) {
-	DBConn.First(dest, id)
+func Get[D interface{}](id uint, dest *D) *gorm.DB {
+	return DBConn.First(dest, id)
 }
 
-func GetMore[D interface{}](ids []uint, dest *[]D) {
-	DBConn.Find(dest, ids)
+func GetMore[D interface{}](ids []uint, dest *[]D) *gorm.DB {
+	return DBConn.Where(ids).Find(dest)
 }
 
 func GetByField(conditions interface{}, dest interface{}, joins []string) {

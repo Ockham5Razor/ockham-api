@@ -21,7 +21,7 @@ type Billing struct {
 	PaymentDueDate   time.Time // 付款截止日期：需在此前付款，付款截止后将停止服务。
 
 	SubscribingServicePlans []uint // 订阅服务
-	SubscribingTrafficPlans []uint // 订阅流量
+	SubscribingTrafficPlans []uint // 订阅流量（包含内置流量）
 
 	UserID uint  // 用户（外键）
 	User   *User // 用户（引用）
@@ -32,7 +32,29 @@ func (b *Billing) Save(c *gin.Context) {
 }
 
 func (b *Billing) AllSubscriptionActivate() {
-	// TODO activate service plan subscription
-	// TODO activate traffic plan subscription
-	// TODO create traffic packs
+	// activate service plan subscription
+	spSubs := make([]ServicePlanSubscription, 0)
+	database.GetMore[ServicePlanSubscription](b.SubscribingServicePlans, &spSubs).Update("SubscriptionEnabled", true)
+
+	// activate additional traffic plan subscription
+	tpSubs := make([]TrafficPlanSubscription, 0)
+	database.GetMore[TrafficPlanSubscription](b.SubscribingTrafficPlans, &tpSubs).Update("SubscriptionEnabled", true)
+
+	// create traffic packs
+	for _, tpSub := range tpSubs {
+		t := TrafficPack{
+			TotalTrafficBytes: tpSub.Traffic,
+			UsedTrafficBytes:  0,
+
+			SystemPriority: tpSub.SystemPriority,
+			UserPriority:   tpSub.UserPriority,
+			AdminPriority:  tpSub.AdminPriority,
+
+			ServicePlanSubscriptionID: tpSub.ServicePlanSubscriptionID,
+			TrafficPlanSubscriptionID: tpSub.ID,
+
+			UserID: tpSub.UserID,
+		}
+		database.DBConn.Save(t)
+	}
 }

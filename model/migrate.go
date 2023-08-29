@@ -15,7 +15,7 @@ func Migrate(db *gorm.DB) {
 		&TrafficPlan{},
 		&ServicePlanSubscription{},
 		&TrafficPlanSubscription{},
-		&TrafficPacks{},
+		&TrafficPack{},
 		&Session{},
 		&EmailValidation{},
 		&RechargeCode{},

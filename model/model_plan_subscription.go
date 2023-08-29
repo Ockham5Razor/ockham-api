@@ -30,6 +30,8 @@ type TrafficPlanSubscription struct {
 	SubscriptionStartTime   time.Time
 	SubscriptionEndTime     time.Time
 
+	Traffic uint64
+
 	// 优先级：越大越优先，排序依据：admin -> user -> system
 	SystemPriority int // 系统预设的优先级
 	UserPriority   int // 用户排列的优先级
@@ -47,7 +49,7 @@ type TrafficPlanSubscription struct {
 	Bundled bool
 }
 
-type TrafficPacks struct {
+type TrafficPack struct {
 	gorm.Model
 
 	TotalTrafficBytes uint64

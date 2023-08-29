@@ -143,6 +143,7 @@ func SubscribeServicePlan(c *gin.Context) {
 			Bundled:                   true,
 		}
 		_ = database.Create(c, btpSub, "TrafficPlanSubscription", util.ErrorMessageStatus)
+		tpSubIDs = append(tpSubIDs, btpSub.ID)
 
 		// create additional traffic plan
 		priorityRank := 100
