@@ -30,8 +30,10 @@ type TrafficPlanSubscription struct {
 	SubscriptionStartTime   time.Time
 	SubscriptionEndTime     time.Time
 
-	SystemPriority uint // 系统优先级
-	UserPriority   uint // 用户优先级
+	// 优先级：越大越优先，排序依据：admin -> user -> system
+	SystemPriority int // 系统预设的优先级
+	UserPriority   int // 用户排列的优先级
+	AdminPriority  int // 管理员排列的优先级
 
 	ServicePlanID uint        `json:"-"`
 	ServicePlan   ServicePlan `json:"-"`
@@ -54,8 +56,10 @@ type TrafficPacks struct {
 	StartTime time.Time
 	EndTime   time.Time
 
-	SystemPriority uint // 系统优先级
-	UserPriority   uint // 用户优先级
+	// 优先级：越大越优先，排序依据：admin -> user -> system
+	SystemPriority int // 系统预设的优先级
+	UserPriority   int // 用户排列的优先级
+	AdminPriority  int // 管理员排列的优先级
 
 	ServicePlanSubscriptionID uint                    `json:"-"`
 	ServicePlanSubscription   ServicePlanSubscription `json:"-"`

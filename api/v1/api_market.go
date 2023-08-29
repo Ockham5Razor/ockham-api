@@ -127,12 +127,16 @@ func SubscribeServicePlan(c *gin.Context) {
 		}
 		_ = database.Create(c, spSub, "ServicePlanSubscription", util.ErrorMessageStatus)
 		spSubIDs = append(spSubIDs, spSub.ID)
+		billing.BillingTotal += sp.PlanPrice
 
 		// create bundled traffic plan
 		btpSub := &model.TrafficPlanSubscription{
 			SubscriptionTitle:         sp.BundledTrafficPlan.PlanTitle,
 			SubscriptionDescription:   sp.BundledTrafficPlan.PlanDescription,
 			SubscriptionEnabled:       false,
+			SystemPriority:            0,
+			UserPriority:              0,
+			AdminPriority:             0,
 			ServicePlanID:             sp.ID,
 			ServicePlanSubscriptionID: spSub.ID,
 			UserID:                    currentUser.ID,
@@ -141,12 +145,17 @@ func SubscribeServicePlan(c *gin.Context) {
 		_ = database.Create(c, btpSub, "TrafficPlanSubscription", util.ErrorMessageStatus)
 
 		// create additional traffic plan
+		priorityRank := 100
 		for _, tpReq := range spReq.AdditionalTrafficPlans {
+			priorityRank -= 1 // priority decrease
 			tp := model.GetTrafficPlan[model.TrafficPlan](tpReq.TrafficPlanID)
 			tpSub := &model.TrafficPlanSubscription{
 				SubscriptionTitle:         tp.PlanTitle,
 				SubscriptionDescription:   tp.PlanDescription,
 				SubscriptionEnabled:       false,
+				SystemPriority:            priorityRank,
+				UserPriority:              0,
+				AdminPriority:             0,
 				ServicePlanID:             sp.ID,
 				ServicePlanSubscriptionID: spSub.ID,
 				UserID:                    currentUser.ID,
@@ -154,6 +163,7 @@ func SubscribeServicePlan(c *gin.Context) {
 			}
 			_ = database.Create(c, tpSub, "TrafficPlanSubscription", util.ErrorMessageStatus)
 			tpSubIDs = append(tpSubIDs, tpSub.ID)
+			billing.BillingTotal += tp.PlanPrice
 		}
 	}
 
