@@ -20,7 +20,7 @@ func Migrate(db *gorm.DB) {
 		&EmailValidation{},
 		&RechargeCode{},
 		&Billing{},
-		&Agent{},
+		&VmessAgent{},
 		&AgentRosterToken{},
 	}
 

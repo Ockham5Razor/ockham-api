@@ -84,10 +84,10 @@ func GrantRole(c *gin.Context) {
 	userIdU64, _ := strconv.ParseUint(userIdStr, 10, 32)
 
 	targetUser := &model.User{}
-	database.Get(uint(userIdU64), targetUser)
+	database.Get[model.User](uint(userIdU64), targetUser)
 
 	targetRole := &model.Role{}
-	database.Get(grantRoleForm.RoleID, targetRole)
+	database.Get[model.Role](grantRoleForm.RoleID, targetRole)
 
 	targetUser.Roles = append(targetUser.Roles, targetRole)
 	_ = database.Update(c, targetUser, "User Role", util.ErrorMessageStatus)

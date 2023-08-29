@@ -58,10 +58,10 @@ func DeleteAgent(c *gin.Context) {
 func GetAgentConfig(c *gin.Context) {
 	idStr := c.Param("agent_id")
 	idU64, _ := strconv.ParseUint(idStr, 10, 32)
-	agent := &model.Agent{}
+	agent := &model.VmessAgent{}
 	ctx := database.DBConn.Find(agent, idU64)
 	if ctx.RowsAffected == 0 {
-		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("Agent not found!").Responds()
+		util.ErrorPack(c).WithHttpResponseCode(http.StatusNotFound).WithMessage("VmessAgent not found!").Responds()
 	} else {
 		conf := model.GenConfig(agent.ServerPort, 8080, agent.WsPath)
 		util.SuccessPack(c).WithData(conf).RespondsBodyOnly()
@@ -89,10 +89,10 @@ func AgentPulse(c *gin.Context) {
 		return
 	}
 
-	targetAgent := &model.Agent{}
-	database.Get(uint(agentId), targetAgent)
+	targetAgent := &model.VmessAgent{}
+	database.Get[model.VmessAgent](uint(agentId), targetAgent)
 	targetAgent.LastPulse = time.Now()
-	err = database.Update(c, targetAgent, "Agent", util.ErrorMessageStatus)
+	err = database.Update(c, targetAgent, "VmessAgent", util.ErrorMessageStatus)
 	if err != nil {
 		util.ErrorPack(c).WithMessage("update agent error").WithHttpResponseCode(http.StatusInternalServerError).Responds()
 		return
@@ -118,7 +118,7 @@ func GetAgentSecretKey(resourceIdStr string) (string, error) {
 		return "", errors.New("agent_id needs to be integer")
 	}
 
-	agent := &model.Agent{}
+	agent := &model.VmessAgent{}
 	database.DBConn.Find(agent, agentId)
 	// TODO bad way to check if agent exists.
 	if agent.Name == "" {

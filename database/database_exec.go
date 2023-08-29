@@ -65,8 +65,12 @@ func Updates(c *gin.Context, whereFields interface{}, saveFields interface{}, mo
 	return nil
 }
 
-func Get(id uint, dest interface{}) {
+func Get[D interface{}](id uint, dest *D) {
 	DBConn.First(dest, id)
+}
+
+func GetMore[D interface{}](ids []uint, dest *D) {
+	DBConn.Find(dest, ids)
 }
 
 func GetByField(conditions interface{}, dest interface{}, joins []string) {

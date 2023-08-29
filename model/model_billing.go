@@ -1,7 +1,10 @@
 package model
 
 import (
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"ockham-api/api/v1/util"
+	"ockham-api/database"
 	"time"
 )
 
@@ -17,8 +20,49 @@ type Billing struct {
 	PaymentStartDate time.Time // 付款开始日期：此前付款无效，账单将提前此日期 7 天展示。
 	PaymentDueDate   time.Time // 付款截止日期：需在此前付款，付款截止后将停止服务。
 
-	ServicePlanSubscriptionID uint                     // 用户的订阅（外键）
-	ServicePlanSubscription   *ServicePlanSubscription // 用户的订阅（引用）
-	UserID                    uint                     // 用户（外键）
-	User                      *User                    // 用户（引用）
+	SubscribingServicePlans []uint // 订阅服务
+	SubscribingTrafficPlans []uint // 订阅流量
+
+	UserID uint  // 用户（外键）
+	User   *User // 用户（引用）
+}
+
+func (b *Billing) SubscribeServicePlans(plans *[]ServicePlan, c *gin.Context) {
+	ids := make([]uint, 0)
+	for _, p := range *plans {
+		subscription := &ServicePlanSubscription{
+			SubscriptionTitle:       p.PlanTitle,
+			SubscriptionDescription: p.PlanDescription,
+			SubscriptionEnabled:     false,
+			User:                    *b.User,
+		}
+		_ = database.Create(c, subscription, "ServicePlanSubscription", util.ErrorMessageStatus)
+		ids = append(ids, subscription.ID)
+	}
+	b.SubscribingServicePlans = ids
+}
+
+func (b *Billing) SubscribeTrafficPlans(plans *[]TrafficPlan, c *gin.Context) {
+	ids := make([]uint, 0)
+	for _, p := range *plans {
+		subscription := &TrafficPlanSubscription{
+			SubscriptionTitle:       p.PlanTitle,
+			SubscriptionDescription: p.PlanDescription,
+			SubscriptionEnabled:     false,
+			User:                    *b.User,
+		}
+		_ = database.Create(c, subscription, "TrafficPlanSubscription", util.ErrorMessageStatus)
+		ids = append(ids, subscription.ID)
+	}
+	b.SubscribingServicePlans = ids
+}
+
+func (b *Billing) Save(c *gin.Context) {
+	_ = database.Create(c, b, "Billing", util.ErrorMessageStatus)
+}
+
+func (b *Billing) AllSubscriptionActivate() {
+	// TODO activate service plan subscription
+	// TODO activate traffic plan subscription
+	// TODO create traffic packs
 }

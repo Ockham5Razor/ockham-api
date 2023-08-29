@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"ockham-api/api/v1/util"
 	"ockham-api/database"
-	"time"
 )
 
 type User struct {
@@ -27,28 +25,6 @@ func GetUser(userID uint64) *User {
 	user := &User{}
 	database.DBConn.Preload("Roles").First(user, userID)
 	return user
-}
-
-func (user *User) Subscribes(sp *ServicePlan, c *gin.Context) {
-	subscription := &ServicePlanSubscription{
-		SubscriptionTitle:       sp.PlanTitle,
-		SubscriptionDescription: sp.PlanDescription,
-		SubscriptionEnabled:     false,
-		User:                    *user,
-	}
-	_ = database.Create(c, subscription, "ServicePlanSubscription", util.ErrorMessageStatus)
-
-	billing := &Billing{
-		BillingTitle:            fmt.Sprintf("订阅服务计划"),
-		BillingDescription:      sp.PlanDescription,
-		BillingTotal:            sp.PlanPrice,
-		BillingDate:             time.Now(),
-		PaymentDueDate:          time.Now().AddDate(0, 0, 1),
-		PaymentSettled:          false,
-		ServicePlanSubscription: subscription,
-		User:                    user,
-	}
-	_ = database.Create(c, billing, "Billing", util.ErrorMessageStatus)
 }
 
 func (user *User) RemoveRole(roleId uint) {

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"ockham-api/api/v1/form"
@@ -9,6 +10,7 @@ import (
 	"ockham-api/database"
 	"ockham-api/model"
 	"strconv"
+	"time"
 )
 
 // ListServicePlans
@@ -79,8 +81,8 @@ func ListMyServicePlanSubscriptions(c *gin.Context) {
 }
 
 type SubscribeServicePlanForm struct {
-	ServicePlanId       uint
-	ConsolidateBillings bool // 合并账单一次结清
+	ServicePlanIDs           []uint `json:"service_plan_ids"`
+	AdditionalTrafficPlanIDs []uint `json:"traffic_plan_ids"`
 }
 
 // SubscribeServicePlan
@@ -97,8 +99,24 @@ func SubscribeServicePlan(c *gin.Context) {
 	subscribeServicePlanForm := &SubscribeServicePlanForm{}
 	util.FillJsonForm(c, subscribeServicePlanForm)
 
-	servicePlan := model.GetServicePlan(subscribeServicePlanForm.ServicePlanId)
-	currentUser.Subscribes(servicePlan, c)
+	billing := &model.Billing{
+		BillingTitle:       fmt.Sprintf("订阅服务计划"),
+		BillingDescription: fmt.Sprintf("订阅服务计划"),
+		BillingTotal:       0.0,
+		BillingDate:        time.Now(),
+		PaymentDueDate:     time.Now().AddDate(0, 0, 1),
+		PaymentSettled:     false,
+		User:               currentUser,
+	}
+	servicePlans := model.GetServicePlans(subscribeServicePlanForm.ServicePlanIDs)
+	trafficPlans := model.GetTrafficPlans(subscribeServicePlanForm.AdditionalTrafficPlanIDs)
+
+	billing.SubscribeServicePlans(servicePlans, c)
+	billing.SubscribeTrafficPlans(trafficPlans, c)
+
+	billing.Save(c)
+
+	// TODO send billing email
 
 	util.SuccessPack(c).WithMessage("Successfully subscribed service plan!").Responds()
 }
