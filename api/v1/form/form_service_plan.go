@@ -8,7 +8,7 @@ type ServicePlanForm struct {
 	PlanEnabled     bool   // 启用中
 	PlanPrice       float32
 
-	ServingDays int16
+	ServingDays int
 
 	BundledTrafficPlanID  uint
 	AvailableTrafficPlans []uint

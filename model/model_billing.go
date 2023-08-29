@@ -46,6 +46,9 @@ func (b *Billing) AllSubscriptionActivate() {
 			TotalTrafficBytes: tpSub.Traffic,
 			UsedTrafficBytes:  0,
 
+			StartTime: tpSub.SubscriptionStartTime,
+			EndTime:   tpSub.SubscriptionEndTime,
+
 			SystemPriority: tpSub.SystemPriority,
 			UserPriority:   tpSub.UserPriority,
 			AdminPriority:  tpSub.AdminPriority,

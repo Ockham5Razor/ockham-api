@@ -103,12 +103,14 @@ func SubscribeServicePlan(c *gin.Context) {
 	f := &SubscribeServicePlanForm{}
 	util.FillJsonForm(c, f)
 
+	now := time.Now()
+
 	billing := &model.Billing{
 		BillingTitle:       fmt.Sprintf("订阅服务计划"),
 		BillingDescription: fmt.Sprintf("订阅服务计划"),
 		BillingTotal:       0.0,
-		BillingDate:        time.Now(),
-		PaymentDueDate:     time.Now().AddDate(0, 0, 1),
+		BillingDate:        now,
+		PaymentDueDate:     now.AddDate(0, 0, 1),
 		PaymentSettled:     false,
 		User:               currentUser,
 	}
@@ -122,6 +124,8 @@ func SubscribeServicePlan(c *gin.Context) {
 			SubscriptionTitle:       sp.PlanTitle,
 			SubscriptionDescription: sp.PlanDescription,
 			SubscriptionEnabled:     false,
+			SubscriptionStartTime:   now,
+			SubscriptionEndTime:     now.AddDate(0, 0, sp.ServingDays),
 			ServicePlanID:           sp.ID,
 			UserID:                  currentUser.ID,
 		}
@@ -134,6 +138,8 @@ func SubscribeServicePlan(c *gin.Context) {
 			SubscriptionTitle:         sp.BundledTrafficPlan.PlanTitle,
 			SubscriptionDescription:   sp.BundledTrafficPlan.PlanDescription,
 			SubscriptionEnabled:       false,
+			SubscriptionStartTime:     now,
+			SubscriptionEndTime:       now.AddDate(0, 0, sp.ServingDays),
 			SystemPriority:            0,
 			UserPriority:              0,
 			AdminPriority:             0,
@@ -154,6 +160,8 @@ func SubscribeServicePlan(c *gin.Context) {
 				SubscriptionTitle:         tp.PlanTitle,
 				SubscriptionDescription:   tp.PlanDescription,
 				SubscriptionEnabled:       false,
+				SubscriptionStartTime:     now,
+				SubscriptionEndTime:       now.AddDate(0, 0, sp.ServingDays),
 				SystemPriority:            priorityRank,
 				UserPriority:              0,
 				AdminPriority:             0,

@@ -13,7 +13,7 @@ type ServicePlan struct {
 	PlanEnabled     bool
 	PlanPrice       float32
 
-	ServingDays int16
+	ServingDays int
 
 	BundledTrafficPlanID uint
 	BundledTrafficPlan   TrafficPlan
