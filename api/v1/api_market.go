@@ -81,8 +81,12 @@ func ListMyServicePlanSubscriptions(c *gin.Context) {
 }
 
 type SubscribeServicePlanForm struct {
-	ServicePlanIDs           []uint `json:"service_plan_ids"`
-	AdditionalTrafficPlanIDs []uint `json:"traffic_plan_ids"`
+	ServicePlans []struct {
+		ServicePlanID          uint `json:"service_plan_id"`
+		AdditionalTrafficPlans []struct {
+			TrafficPlanID uint `json:"traffic_plan_id"`
+		} `json:"additional_traffic_plans"`
+	} `json:"service_plans"`
 }
 
 // SubscribeServicePlan
@@ -96,8 +100,8 @@ type SubscribeServicePlanForm struct {
 // @Router /v1/users/me/service-plan-subscriptions [POST]
 func SubscribeServicePlan(c *gin.Context) {
 	currentUser := middleware.GetCurrentUser(c)
-	subscribeServicePlanForm := &SubscribeServicePlanForm{}
-	util.FillJsonForm(c, subscribeServicePlanForm)
+	f := &SubscribeServicePlanForm{}
+	util.FillJsonForm(c, f)
 
 	billing := &model.Billing{
 		BillingTitle:       fmt.Sprintf("订阅服务计划"),
@@ -108,12 +112,53 @@ func SubscribeServicePlan(c *gin.Context) {
 		PaymentSettled:     false,
 		User:               currentUser,
 	}
-	servicePlans := model.GetServicePlans(subscribeServicePlanForm.ServicePlanIDs)
-	trafficPlans := model.GetTrafficPlans(subscribeServicePlanForm.AdditionalTrafficPlanIDs)
 
-	billing.SubscribeServicePlans(servicePlans, c)
-	billing.SubscribeTrafficPlans(trafficPlans, c)
+	spSubIDs := make([]uint, 0)
+	tpSubIDs := make([]uint, 0)
+	for _, spReq := range f.ServicePlans {
+		// create service plan
+		sp := model.GetServicePlan[model.ServicePlan](spReq.ServicePlanID)
+		spSub := &model.ServicePlanSubscription{
+			SubscriptionTitle:       sp.PlanTitle,
+			SubscriptionDescription: sp.PlanDescription,
+			SubscriptionEnabled:     false,
+			ServicePlanID:           sp.ID,
+			UserID:                  currentUser.ID,
+		}
+		_ = database.Create(c, spSub, "ServicePlanSubscription", util.ErrorMessageStatus)
+		spSubIDs = append(spSubIDs, spSub.ID)
 
+		// create bundled traffic plan
+		btpSub := &model.TrafficPlanSubscription{
+			SubscriptionTitle:         sp.BundledTrafficPlan.PlanTitle,
+			SubscriptionDescription:   sp.BundledTrafficPlan.PlanDescription,
+			SubscriptionEnabled:       false,
+			ServicePlanID:             sp.ID,
+			ServicePlanSubscriptionID: spSub.ID,
+			UserID:                    currentUser.ID,
+			Bundled:                   true,
+		}
+		_ = database.Create(c, btpSub, "TrafficPlanSubscription", util.ErrorMessageStatus)
+
+		// create additional traffic plan
+		for _, tpReq := range spReq.AdditionalTrafficPlans {
+			tp := model.GetTrafficPlan[model.TrafficPlan](tpReq.TrafficPlanID)
+			tpSub := &model.TrafficPlanSubscription{
+				SubscriptionTitle:         tp.PlanTitle,
+				SubscriptionDescription:   tp.PlanDescription,
+				SubscriptionEnabled:       false,
+				ServicePlanID:             sp.ID,
+				ServicePlanSubscriptionID: spSub.ID,
+				UserID:                    currentUser.ID,
+				Bundled:                   false,
+			}
+			_ = database.Create(c, tpSub, "TrafficPlanSubscription", util.ErrorMessageStatus)
+			tpSubIDs = append(tpSubIDs, tpSub.ID)
+		}
+	}
+
+	billing.SubscribingServicePlans = spSubIDs
+	billing.SubscribingTrafficPlans = tpSubIDs
 	billing.Save(c)
 
 	// TODO send billing email

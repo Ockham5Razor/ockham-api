@@ -41,6 +41,8 @@ type TrafficPlanSubscription struct {
 
 	UserID uint `json:"-"`
 	User   User `json:"-"`
+
+	Bundled bool
 }
 
 type TrafficPacks struct {

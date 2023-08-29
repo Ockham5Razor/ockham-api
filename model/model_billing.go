@@ -27,36 +27,6 @@ type Billing struct {
 	User   *User // 用户（引用）
 }
 
-func (b *Billing) SubscribeServicePlans(plans *[]ServicePlan, c *gin.Context) {
-	ids := make([]uint, 0)
-	for _, p := range *plans {
-		subscription := &ServicePlanSubscription{
-			SubscriptionTitle:       p.PlanTitle,
-			SubscriptionDescription: p.PlanDescription,
-			SubscriptionEnabled:     false,
-			User:                    *b.User,
-		}
-		_ = database.Create(c, subscription, "ServicePlanSubscription", util.ErrorMessageStatus)
-		ids = append(ids, subscription.ID)
-	}
-	b.SubscribingServicePlans = ids
-}
-
-func (b *Billing) SubscribeTrafficPlans(plans *[]TrafficPlan, c *gin.Context) {
-	ids := make([]uint, 0)
-	for _, p := range *plans {
-		subscription := &TrafficPlanSubscription{
-			SubscriptionTitle:       p.PlanTitle,
-			SubscriptionDescription: p.PlanDescription,
-			SubscriptionEnabled:     false,
-			User:                    *b.User,
-		}
-		_ = database.Create(c, subscription, "TrafficPlanSubscription", util.ErrorMessageStatus)
-		ids = append(ids, subscription.ID)
-	}
-	b.SubscribingServicePlans = ids
-}
-
 func (b *Billing) Save(c *gin.Context) {
 	_ = database.Create(c, b, "Billing", util.ErrorMessageStatus)
 }

@@ -69,7 +69,7 @@ func Get[D interface{}](id uint, dest *D) {
 	DBConn.First(dest, id)
 }
 
-func GetMore[D interface{}](ids []uint, dest *D) {
+func GetMore[D interface{}](ids []uint, dest *[]D) {
 	DBConn.Find(dest, ids)
 }
 

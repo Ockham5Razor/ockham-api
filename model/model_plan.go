@@ -33,14 +33,26 @@ type TrafficPlan struct {
 	Inheritable         bool
 }
 
+func GetServicePlan(id uint) *ServicePlan {
+	plan := &ServicePlan{}
+	database.Get[ServicePlan](id, plan)
+	return plan
+}
+
 func GetServicePlans(ids []uint) *[]ServicePlan {
 	plans := &[]ServicePlan{}
-	database.GetMore[[]ServicePlan](ids, plans)
+	database.GetMore[ServicePlan](ids, plans)
 	return plans
+}
+
+func GetTrafficPlan(id uint) *TrafficPlan {
+	plan := &TrafficPlan{}
+	database.Get[TrafficPlan](id, plan)
+	return plan
 }
 
 func GetTrafficPlans(ids []uint) *[]TrafficPlan {
 	plans := &[]TrafficPlan{}
-	database.GetMore[[]TrafficPlan](ids, plans)
+	database.GetMore[TrafficPlan](ids, plans)
 	return plans
 }
