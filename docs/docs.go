@@ -512,6 +512,108 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/subscriptions/{id}": {
+            "post": {
+                "description": "List subscriptions",
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "Get Subscription",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/subscriptions/{id}/subscribe": {
+            "post": {
+                "description": "Subscribe your nodes by link",
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "View Subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client Type",
+                        "name": "client",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Subscription Token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me/service-plan-subscriptions": {
             "get": {
                 "security": [
@@ -613,6 +715,41 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/me/subscriptions": {
+            "post": {
+                "description": "List subscriptions",
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "List Subscriptions",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/util.Pack"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/util.Pack"
                         }
@@ -883,12 +1020,27 @@ const docTemplate = `{
         "v1.SubscribeServicePlanForm": {
             "type": "object",
             "properties": {
-                "consolidateBillings": {
-                    "description": "合并账单一次结清",
-                    "type": "boolean"
-                },
-                "servicePlanId": {
-                    "type": "integer"
+                "service_plans": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "additional_traffic_plans": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "traffic_plan_id": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            },
+                            "service_plan_id": {
+                                "type": "integer"
+                            }
+                        }
+                    }
                 }
             }
         },

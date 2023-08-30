@@ -99,11 +99,20 @@ definitions:
     type: object
   v1.SubscribeServicePlanForm:
     properties:
-      consolidateBillings:
-        description: 合并账单一次结清
-        type: boolean
-      servicePlanId:
-        type: integer
+      service_plans:
+        items:
+          properties:
+            additional_traffic_plans:
+              items:
+                properties:
+                  traffic_plan_id:
+                    type: integer
+                type: object
+              type: array
+            service_plan_id:
+              type: integer
+          type: object
+        type: array
     type: object
   v1.ValidateEmailJsonForm:
     properties:
@@ -597,6 +606,74 @@ paths:
       summary: Get service plan
       tags:
       - market
+  /v1/subscriptions/{id}:
+    post:
+      description: List subscriptions
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: Get Subscription
+      tags:
+      - subscription
+  /v1/subscriptions/{id}/subscribe:
+    post:
+      description: Subscribe your nodes by link
+      parameters:
+      - description: Client Type
+        in: query
+        name: client
+        required: true
+        type: string
+      - description: Subscription Token
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: View Subscription
+      tags:
+      - subscription
   /v1/users/me/service-plan-subscriptions:
     get:
       description: List service plan subscriptions
@@ -672,6 +749,29 @@ paths:
       summary: Get service plan subscriptions
       tags:
       - market
+  /v1/users/me/subscriptions:
+    post:
+      description: List subscriptions
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/util.Pack'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Pack'
+      summary: List Subscriptions
+      tags:
+      - subscription
   /v1/users/me/wallet:
     get:
       responses:

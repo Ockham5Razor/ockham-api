@@ -51,7 +51,9 @@ func ApiV1(r *gin.Engine) {
 		}
 		v1GroupSubscriptions := v1Group.Group("/")
 		{
-			v1GroupSubscriptions.GET("/subscription-views/:id", ViewSubscription)
+			v1GroupSubscriptions.GET("/subscriptions/:id/subscribe", ViewSubscription)
+			v1GroupSubscriptions.GET("/subscriptions/:id", GetSubscription)
+			v1GroupSubscriptions.GET("/users/me/subscriptions", middleware.Token(), middleware.CurrentUser(), ListSubscriptions)
 		}
 	}
 }

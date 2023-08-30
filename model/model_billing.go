@@ -39,25 +39,4 @@ func (b *Billing) AllSubscriptionActivate() {
 	// activate additional traffic plan subscription
 	tpSubs := make([]TrafficPlanSubscription, 0)
 	database.GetMore[TrafficPlanSubscription](b.SubscribingTrafficPlans, &tpSubs).Update("SubscriptionEnabled", true)
-
-	// create traffic packs
-	for _, tpSub := range tpSubs {
-		t := TrafficPack{
-			TotalTrafficBytes: tpSub.Traffic,
-			UsedTrafficBytes:  0,
-
-			StartTime: tpSub.SubscriptionStartTime,
-			EndTime:   tpSub.SubscriptionEndTime,
-
-			SystemPriority: tpSub.SystemPriority,
-			UserPriority:   tpSub.UserPriority,
-			AdminPriority:  tpSub.AdminPriority,
-
-			ServicePlanSubscriptionID: tpSub.ServicePlanSubscriptionID,
-			TrafficPlanSubscriptionID: tpSub.ID,
-
-			UserID: tpSub.UserID,
-		}
-		database.DBConn.Save(t)
-	}
 }

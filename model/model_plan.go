@@ -29,8 +29,8 @@ type TrafficPlan struct {
 	PlanEnabled     bool
 	PlanPrice       float32
 
-	MonthlyTrafficBytes int64
-	Inheritable         bool
+	TotalTrafficBytes int64
+	Inheritable       bool
 }
 
 func GetServicePlan(id uint) *ServicePlan {
