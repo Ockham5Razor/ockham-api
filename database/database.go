@@ -22,6 +22,7 @@ func Init() *gorm.DB {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数名称作为表名
 		},
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
 		panic("Failed to connect database.")

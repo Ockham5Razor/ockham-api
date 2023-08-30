@@ -20,8 +20,8 @@ type Billing struct {
 	PaymentStartDate time.Time // 付款开始日期：此前付款无效，账单将提前此日期 7 天展示。
 	PaymentDueDate   time.Time // 付款截止日期：需在此前付款，付款截止后将停止服务。
 
-	SubscribingServicePlans IDList // 订阅服务
-	SubscribingTrafficPlans IDList // 订阅流量（包含内置流量）
+	SubscribingServicePlans *IDList // 订阅服务
+	SubscribingTrafficPlans *IDList // 订阅流量（包含内置流量）
 
 	UserID uint  // 用户（外键）
 	User   *User // 用户（引用）
@@ -34,9 +34,9 @@ func (b *Billing) Save(c *gin.Context) {
 func (b *Billing) AllSubscriptionActivate() {
 	// activate service plan subscription
 	spSubs := make([]ServicePlanSubscription, 0)
-	database.GetMore[ServicePlanSubscription](b.SubscribingServicePlans, &spSubs).Update("SubscriptionEnabled", true)
+	database.GetMore[ServicePlanSubscription](*b.SubscribingServicePlans, &spSubs).Update("SubscriptionEnabled", true)
 
 	// activate additional traffic plan subscription
 	tpSubs := make([]TrafficPlanSubscription, 0)
-	database.GetMore[TrafficPlanSubscription](b.SubscribingTrafficPlans, &tpSubs).Update("SubscriptionEnabled", true)
+	database.GetMore[TrafficPlanSubscription](*b.SubscribingTrafficPlans, &tpSubs).Update("SubscriptionEnabled", true)
 }

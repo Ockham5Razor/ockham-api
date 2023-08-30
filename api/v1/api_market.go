@@ -115,8 +115,8 @@ func SubscribeServicePlan(c *gin.Context) {
 		User:               currentUser,
 	}
 
-	spSubIDs := make([]uint, 0)
-	tpSubIDs := make([]uint, 0)
+	spSubIDs := make(model.IDList, 0)
+	tpSubIDs := make(model.IDList, 0)
 	for _, spReq := range f.ServicePlans {
 		// create service plan
 		sp := model.GetServicePlan(spReq.ServicePlanID)
@@ -180,8 +180,8 @@ func SubscribeServicePlan(c *gin.Context) {
 		}
 	}
 
-	billing.SubscribingServicePlans = spSubIDs
-	billing.SubscribingTrafficPlans = tpSubIDs
+	billing.SubscribingServicePlans = &spSubIDs
+	billing.SubscribingTrafficPlans = &tpSubIDs
 	billing.Save(c)
 
 	// TODO send billing email
