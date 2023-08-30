@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"ockham-api/api/v1/util"
 )
@@ -23,10 +24,10 @@ func Migrate(db *gorm.DB) {
 		&AgentRosterToken{},
 	}
 
-	for i := 0; i < len(models); i++ {
-		err := db.AutoMigrate(models[i])
+	for _, model := range models {
+		err := db.AutoMigrate(model)
 		if err != nil {
-			panic("Failed to migrate table.")
+			panic(fmt.Sprintf("Failed to migrate table, model is: %#v", model))
 		}
 	}
 }
