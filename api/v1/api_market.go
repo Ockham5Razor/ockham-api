@@ -119,7 +119,7 @@ func SubscribeServicePlan(c *gin.Context) {
 	tpSubIDs := make([]uint, 0)
 	for _, spReq := range f.ServicePlans {
 		// create service plan
-		sp := model.GetServicePlan[model.ServicePlan](spReq.ServicePlanID)
+		sp := model.GetServicePlan(spReq.ServicePlanID)
 		spSub := &model.ServicePlanSubscription{
 			SubscriptionTitle:       sp.PlanTitle,
 			SubscriptionDescription: sp.PlanDescription,
@@ -157,7 +157,7 @@ func SubscribeServicePlan(c *gin.Context) {
 		priorityRank := 100
 		for _, tpReq := range spReq.AdditionalTrafficPlans {
 			priorityRank -= 1 // priority decrease
-			tp := model.GetTrafficPlan[model.TrafficPlan](tpReq.TrafficPlanID)
+			tp := model.GetTrafficPlan(tpReq.TrafficPlanID)
 			tpSub := &model.TrafficPlanSubscription{
 				SubscriptionTitle:         tp.PlanTitle,
 				SubscriptionDescription:   tp.PlanDescription,
